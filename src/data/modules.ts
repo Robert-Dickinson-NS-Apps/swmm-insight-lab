@@ -10,7 +10,7 @@ export interface ModuleNode {
   cEquivalent?: {
     file: string;        // EPA SWMM C source file (USEPA/Stormwater-Management-Model)
     symbol?: string;     // representative function / struct
-    notes: string;       // how the two relate, what differs
+    notes?: string;      // how the two relate, what differs
   };
 }
 
