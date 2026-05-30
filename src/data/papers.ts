@@ -6,137 +6,149 @@ export interface Paper {
   authors: string;
   year: number;
   venue: string;
-  url: string;            // DOI or canonical URL
-  summary: string;        // 2-3 sentences
-  /** Which SWMM5+ subsystems this paper underpins */
+  url: string;
+  summary: string;
   relatedSubsystems: SubsystemId[];
-  /** Optional pointers to specific module ids */
   relatedModules?: string[];
+  /** Mark the foundational paper(s) */
+  primary?: boolean;
 }
 
 /**
  * Curated reading list of Hodges (and close collaborators') papers that
- * directly informed SWMM5+. Each entry maps to subsystems so the architecture
- * page can cross-reference theory ↔ code.
+ * directly informed SWMM5+. Citations verified against HESS / MDPI Water /
+ * ASCE / Springer / NSF PAR (Nov 2024).
  */
 export const PAPERS: Paper[] = [
   {
-    id: "hodges2019",
+    id: "hodges2019-hess",
+    primary: true,
     title:
       "Conservative finite-volume forms of the Saint-Venant equations for hydrology and urban drainage",
     authors: "Ben R. Hodges",
     year: 2019,
-    venue: "Hydrology and Earth System Sciences (HESS), 23(3): 1281–1304",
+    venue: "Hydrology and Earth System Sciences (HESS) 23(3): 1281–1304",
     url: "https://doi.org/10.5194/hess-23-1281-2019",
     summary:
-      "Derives the cell-integrated finite-volume form of the Saint-Venant equations used as the mathematical foundation of SWMM5+. Argues that classical SWMM/HEC-RAS discretizations are not strictly conservative and shows a FV alternative that is robust through transitions between free-surface and pressurized flow.",
+      "Derives the integral, flux-conservative finite-volume form of the 1-D Saint-Venant equations used as the mathematical foundation of SWMM5+. By shifting parts of the hydrostatic-pressure and gravity source terms into the flux, the discretization conserves momentum exactly across hydraulic jumps without bespoke shock capturing.",
     relatedSubsystems: ["hydraulics", "timeloop"],
     relatedModules: ["face", "rk2_lowlevel", "runge_kutta2"],
   },
   {
-    id: "hodges-liu-2020",
+    id: "hodges-liu-2019-jhr",
     title:
-      "A Finite-Volume Approach for Stormwater Computational Hydraulics: SWMM5+",
-    authors: "Ben R. Hodges, Cheng-Wei Yu, Eric D. Jenkins, et al.",
-    year: 2023,
-    venue:
-      "Journal of Hydraulic Engineering / CIMM technical report — SWMM5+ design overview",
-    url: "https://github.com/CIMM-ORG/SWMM5plus",
+      "Timescale interpolation and no-neighbour discretization for a 1-D finite-volume Saint-Venant solver",
+    authors: "Ben R. Hodges, Frank Liu",
+    year: 2019,
+    venue: "Journal of Hydraulic Research",
+    url: "https://doi.org/10.1080/00221686.2019.1671510",
     summary:
-      "Project paper introducing SWMM5+: explains why the EPA SWMM5 dynamic-wave solver becomes unstable on large urban networks and presents the parallel finite-volume re-engineering that preserves conservation while accepting EPA SWMM .inp files unchanged.",
-    relatedSubsystems: ["hydraulics", "init", "interface", "timeloop"],
-    relatedModules: ["main", "initialization", "interface", "runge_kutta2"],
+      "Introduces a 'timescale interpolation' face scheme that transitions smoothly between sub- and supercritical conditions without a Riemann solver, and a 'no-neighbour' stencil that avoids two-step communication. Both choices are what make the SWMM5+ FV solver friendly to coarray parallelism.",
+    relatedSubsystems: ["hydraulics"],
+    relatedModules: ["face"],
   },
   {
-    id: "preissmann-slot-hodges",
+    id: "hodges-2020-mdpi",
     title:
-      "An evaluation of the Preissmann Slot method for surcharged closed-conduit flow",
-    authors: "Ben R. Hodges & collaborators",
+      "An artificial compressibility method for 1-D simulation of open-channel and pressurised-pipe flow",
+    authors: "Ben R. Hodges",
     year: 2020,
-    venue: "Journal of Hydraulic Research / technical note",
-    url: "https://doi.org/10.1080/00221686.2020.1786743",
+    venue: "Water (MDPI) 12(6): 1727",
+    url: "https://doi.org/10.3390/w12061727",
     summary:
-      "Analyzes how slot width and wave-speed choices affect stability and mass conservation when modeling surcharged sewers with a free-surface solver. Directly motivates the slot implementation choices in SWMM5+.",
+      "Proposes an artificial-compressibility alternative to the Preissmann slot for the free-surface ⇄ pressurised transition in sewers. The analysis directly motivates the surcharge-handling choices made in SWMM5+'s preissmann_slot module.",
+    relatedSubsystems: ["hydraulics"],
+    relatedModules: ["preissmann_slot"],
+  },
+  {
+    id: "yu-hodges-liu-2020-hess",
+    title:
+      "A new form of the Saint-Venant equations for variable topography",
+    authors: "Cheng-Wei Yu, Ben R. Hodges, Frank Liu",
+    year: 2020,
+    venue: "Hydrology and Earth System Sciences (HESS) 24(8): 4001–4024",
+    url: "https://doi.org/10.5194/hess-24-4001-2020",
+    summary:
+      "Extends the conservative FV SVE form to networks with non-prismatic, irregular topography by enforcing Lipschitz smoothness on the bed-slope source. Underpins SWMM5+'s handling of surveyed transects and storage geometry.",
+    relatedSubsystems: ["hydraulics", "network"],
+    relatedModules: ["irregular_channel", "storage_geometry", "rk2_lowlevel"],
+  },
+  {
+    id: "hodges-2024-jee",
+    primary: true,
+    title: "Introducing SWMM5+",
+    authors: "Ben R. Hodges (Forum paper)",
+    year: 2024,
+    venue: "Journal of Environmental Engineering (ASCE) 150(10)",
+    url: "https://doi.org/10.1061/JOEEDU.EEENG-7680",
+    summary:
+      "Official public introduction of the SWMM5+ beta. Documents the coarray-Fortran SPMD architecture, the RK2 FV solver with adaptive CFL < √2/2 stepping, the Preissmann slot for surcharge, the JSON/HDF5 I/O, and an honest estimate of when SWMM5+ will out-pace EPA SWMM (≥32 processors, ≥~160k FV elements).",
+    relatedSubsystems: ["init", "hydraulics", "timeloop", "interface", "output"],
+    relatedModules: ["main", "initialization", "interface", "runge_kutta2", "output"],
+  },
+  {
+    id: "sharior-hodges-2023-slot",
+    title:
+      "Generalized, Dynamic, and Transient-Storage Form of the Preissmann Slot",
+    authors: "Sazzad Sharior, Ben R. Hodges, et al.",
+    year: 2023,
+    venue: "NSF Public Access Repository (par.nsf.gov/biblio/10529833)",
+    url: "https://par.nsf.gov/biblio/10529833",
+    summary:
+      "Generalises the classical Preissmann slot with a dynamic, transient-storage formulation that avoids the artificial-storage artefact at the pipe crown. This is the slot algorithm implemented in SWMM5+'s preissmann_slot.f90.",
     relatedSubsystems: ["hydraulics"],
     relatedModules: ["preissmann_slot", "circular_conduit", "rectangular_conduit"],
   },
   {
-    id: "air-entrapment",
+    id: "hodges-rowney-2018-icwmm",
     title:
-      "Air entrapment in rapidly filling stormwater tunnels: a 1-D two-phase model",
-    authors: "Hodges, B. R. and Sazzad Sharior",
-    year: 2022,
-    venue: "Water Resources Research / EWRI proceedings",
-    url: "https://doi.org/10.1029/2021WR031164",
+      "Foundations for multi-thread parallel computation in stormwater network models",
+    authors: "Ben R. Hodges, A. C. Rowney",
+    year: 2018,
+    venue: "51st International Conference on Water Management Modeling (ICWMM), Toronto",
+    url: "https://www.chijournal.org/C470",
     summary:
-      "Describes the trapped-air pocket physics that occur when surge fills a large tunnel faster than air can escape, and proposes the 1-D pressurized-air formulation implemented in SWMM5+'s air_entrapment.f90.",
-    relatedSubsystems: ["hydraulics"],
-    relatedModules: ["air_entrapment", "preissmann_slot"],
-  },
-  {
-    id: "bipquick",
-    title:
-      "Balanced Iterative Partitioning (BIPquick) for parallel finite-volume hydraulics on link-node networks",
-    authors: "Eric D. Jenkins, Ben R. Hodges",
-    year: 2021,
-    venue: "Environmental Modelling & Software / preprint",
-    url: "https://doi.org/10.1016/j.envsoft.2021.105050",
-    summary:
-      "Introduces the graph-partitioning algorithm used by SWMM5+ to spread an urban drainage network across coarray images while minimizing inter-image communication on shared faces.",
-    relatedSubsystems: ["init"],
-    relatedModules: ["BIPquick", "partitioning"],
-  },
-  {
-    id: "scaling-coarray",
-    title:
-      "Parallel scaling of a coarray-Fortran stormwater engine on dense urban networks",
-    authors: "Hodges et al.",
-    year: 2022,
-    venue: "Computers & Geosciences / CIMM report",
-    url: "https://cimm.utexas.edu/",
-    summary:
-      "Reports strong/weak scaling of SWMM5+ on benchmark networks (extran1, Calumet) using OpenCoarrays + MPI, and discusses the load-balance benefits of BIPquick versus naive partitioning.",
+      "Lays out the theoretical groundwork for parallelising stormwater models. Argues that the sparse pipe-junction graph (≈3–4 connections/node) maps cleanly onto SPMD coarray parallelism and identifies the practical granularity limits set by the Courant condition.",
     relatedSubsystems: ["init", "timeloop"],
-    relatedModules: ["partitioning", "BIPquick", "timeloop"],
+    relatedModules: ["partitioning", "BIPquick"],
   },
   {
-    id: "csv-of-stormwater",
+    id: "hodges-liu-rowney-2018-udm",
+    title: "A new Saint-Venant solver for SWMM",
+    authors: "Ben R. Hodges, Frank Liu, A. Charles Rowney",
+    year: 2018,
+    venue: "11th International Conference on Urban Drainage Modelling (UDM), Palermo. Springer, pp. 582–586",
+    url: "https://doi.org/10.1007/978-3-319-99867-1_100",
+    summary:
+      "First public description of the SWMM5+ prototype. Frames the problem (instability of EPA SWMM's implicit dynamic-wave on large networks) and the proposed fix: subdivide each link into FV cells and use a conservative explicit solver with a custom face scheme.",
+    relatedSubsystems: ["hydraulics", "init", "interface"],
+    relatedModules: ["discretization", "runge_kutta2"],
+  },
+  {
+    id: "hodges-schmidt-2019-ewri",
     title:
-      "Limits of the EPA SWMM5 dynamic-wave solver on large urban drainage networks",
-    authors: "Ben R. Hodges",
+      "Progress on a new engine for the Storm Water Management Model (SWMM)",
+    authors: "Ben R. Hodges, Kevin M. Schmidt",
+    year: 2019,
+    venue: "World Environmental & Water Resources Congress, Pittsburgh PA",
+    url: "https://ascelibrary.org/doi/10.1061/9780784482346",
+    summary:
+      "Progress report on the Fortran 2008 implementation. Introduces BIPquick as the network partitioner and reports early benchmarks of the coarray solver against EPA SWMM on simple networks.",
+    relatedSubsystems: ["init"],
+    relatedModules: ["BIPquick", "partitioning", "interface"],
+  },
+  {
+    id: "morales-hernandez-2020-jhi",
+    title:
+      "High performance computing in water resources hydrodynamics",
+    authors:
+      "Mario Morales-Hernández et al. (incl. Ben R. Hodges)",
     year: 2020,
-    venue:
-      "World Environmental & Water Resources Congress (EWRI) — invited paper",
-    url: "https://ascelibrary.org/doi/10.1061/9780784482971",
+    venue: "Journal of Hydroinformatics 22(5): 1217–1235",
+    url: "https://doi.org/10.2166/hydro.2020.163",
     summary:
-      "Diagnoses the failure modes (oscillation, mass loss, time-step collapse) of the EPA SWMM5 dynamic wave on networks > ~10⁴ links and motivates the move to a conservative FV formulation.",
-    relatedSubsystems: ["hydraulics", "interface"],
-    relatedModules: ["runge_kutta2", "interface"],
-  },
-  {
-    id: "junction-energy",
-    title:
-      "Junction representation for finite-volume stormwater models",
-    authors: "Hodges, Liu, et al.",
-    year: 2023,
-    venue: "Journal of Hydroinformatics",
-    url: "https://doi.org/10.2166/hydro.2023.001",
-    summary:
-      "Proposes the volume-conserving junction element used in SWMM5+ — a 'first-class' FV node with its own storage and overflow handling, replacing EPA SWMM's iterative node-link coupling.",
-    relatedSubsystems: ["hydraulics", "network"],
-    relatedModules: ["junction_elements", "junction_lowlevel"],
-  },
-  {
-    id: "epa-coupling",
-    title:
-      "Coupling a Fortran finite-volume hydraulics engine to the EPA SWMM5 C runtime",
-    authors: "Hodges, Jenkins, Yu",
-    year: 2022,
-    venue: "CIMM technical report",
-    url: "https://cimm.utexas.edu/publications",
-    summary:
-      "Documents the ISO_C_BINDING interface that lets SWMM5+ delegate input parsing, hydrology, and RTC rule evaluation to the unmodified EPA SWMM5 C code while taking over hydraulics.",
-    relatedSubsystems: ["interface", "hydrology"],
-    relatedModules: ["interface", "c_library", "define_api_keys", "control_hydraulics"],
+      "Survey of HPC approaches (MPI, GPU, cloud) in hydrodynamic modelling. Contextualises the SWMM5+ choice of explicit FV + coarray SPMD against implicit-iterative alternatives that parallelise poorly.",
+    relatedSubsystems: ["init", "timeloop"],
+    relatedModules: ["partitioning", "timeloop"],
   },
 ];
