@@ -9,9 +9,94 @@ import type { GraphSource } from "@/components/module-graph";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ModuleGraph = lazy(() => import("@/components/module-graph"));
+
+function downloadJson(filename: string, data: unknown) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadCsv(filename: string, rows: string[][]) {
+  const escape = (cell: string) => {
+    const needsQuotes = /[",\n]/.test(cell);
+    return needsQuotes ? `"${cell.replace(/"/g, "\"\"")}"` : cell;
+  };
+  const csv = rows.map((r) => r.map(escape).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function buildExportPayload() {
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  const unresolved = AUTO_MODULES.flatMap((m) =>
+    m.useDetails.filter((e) => !ids.has(e.name)).map((e) => ({
+      sourceModule: m.name,
+      sourcePath: m.path,
+      targetModule: e.name,
+      line: e.line,
+      only: e.only,
+      source: e.source,
+    }))
+  );
+  return {
+    meta: {
+      repo: GITHUB_REPO,
+      branch: GITHUB_BRANCH,
+      extractedAt: EXTRACTED_AT,
+    },
+    stats: {
+      filesScanned: AUTO_MODULES.length,
+      modulesDeclared: AUTO_MODULES.length,
+      useEdges: EDGE_COUNT,
+      unresolvedTargets: unresolved.length,
+    },
+    modules: AUTO_MODULES.map((m) => ({
+      id: m.id,
+      name: m.name,
+      path: m.path,
+      declaredLine: m.declaredLine,
+      subsystem: m.subsystem,
+      uses: m.uses,
+      useDetails: m.useDetails,
+      summary: m.summary,
+    })),
+    unresolved,
+  };
+}
+
+function buildExportCsvRows() {
+  const rows: string[][] = [
+    ["source_module", "source_path", "target_module", "line", "only_clause", "source_text", "resolved"],
+  ];
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  for (const m of AUTO_MODULES) {
+    for (const e of m.useDetails) {
+      rows.push([
+        m.name,
+        m.path,
+        e.name,
+        String(e.line),
+        e.only ?? "",
+        e.source,
+        ids.has(e.name) ? "yes" : "no",
+      ]);
+    }
+  }
+  return rows;
+}
 
 const searchSchema = z.object({
   module: fallback(z.string().optional(), undefined),
@@ -146,11 +231,31 @@ function ExtractionSummary() {
     <div className="mt-10 rounded-lg border border-border bg-card p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-xl">Extraction diagnostics</h2>
-        <div className="text-[11px] text-muted-foreground">
-          Snapshot {date} ·{" "}
-          <a className="underline" target="_blank" rel="noreferrer" href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_BRANCH}`}>
-            {GITHUB_REPO}@{GITHUB_BRANCH}
-          </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 gap-1.5 text-[11px]"
+            onClick={() => downloadJson("swmm5plus-extraction.json", buildExportPayload())}
+          >
+            <Download className="h-3.5 w-3.5" />
+            JSON
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 gap-1.5 text-[11px]"
+            onClick={() => downloadCsv("swmm5plus-extraction.csv", buildExportCsvRows())}
+          >
+            <Download className="h-3.5 w-3.5" />
+            CSV
+          </Button>
+          <div className="text-[11px] text-muted-foreground">
+            Snapshot {date} ·{" "}
+            <a className="underline" target="_blank" rel="noreferrer" href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_BRANCH}`}>
+              {GITHUB_REPO}@{GITHUB_BRANCH}
+            </a>
+          </div>
         </div>
       </div>
       <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
@@ -284,7 +389,26 @@ function ExtractionTrace({ mod }: { mod: (typeof AUTO_MODULES)[number] }) {
         <div className="text-xs uppercase tracking-wider text-muted-foreground">
           Extraction trace · {mod.useDetails.length} edge{mod.useDetails.length === 1 ? "" : "s"}
         </div>
-        <div className="text-[10px] text-muted-foreground">line · source</div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 gap-1 px-1.5 text-[10px] text-muted-foreground hover:text-foreground"
+            onClick={() =>
+              downloadJson(`${mod.name}-trace.json`, {
+                module: mod.name,
+                path: mod.path,
+                declaredLine: mod.declaredLine,
+                subsystem: mod.subsystem,
+                useDetails: mod.useDetails,
+              })
+            }
+          >
+            <Download className="h-3 w-3" />
+            JSON
+          </Button>
+          <div className="text-[10px] text-muted-foreground">line · source</div>
+        </div>
       </div>
       <ol className="mt-2 divide-y divide-border rounded border border-border bg-secondary/30 font-mono text-[11px]">
         {mod.useDetails.map((e) => {
