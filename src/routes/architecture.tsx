@@ -4,7 +4,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { SUBSYSTEMS, SUBSYSTEM_BY_ID, type SubsystemId } from "@/data/subsystems";
 import { MODULES, MODULES_BY_ID } from "@/data/modules";
-import { AUTO_MODULES, AUTO_MODULES_BY_ID, EDGE_COUNT, GITHUB_REPO, GITHUB_BRANCH, githubFileUrl } from "@/data/auto-modules";
+import { AUTO_MODULES, AUTO_MODULES_BY_ID, EDGE_COUNT, EXTRACTED_AT, GITHUB_REPO, GITHUB_BRANCH, githubFileUrl } from "@/data/auto-modules";
 import type { GraphSource } from "@/components/module-graph";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
