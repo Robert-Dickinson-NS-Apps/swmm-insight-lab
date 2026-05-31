@@ -308,6 +308,7 @@ function ArchitecturePage() {
 function ExtractionSummary() {
   const [imported, setImported] = useState<DiagPayload | null>(null);
   const [importErr, setImportErr] = useState<string | null>(null);
+  const [migrationsApplied, setMigrationsApplied] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [subsFilter, setSubsFilter] = useState<Set<SubsystemId>>(new Set(SUBSYSTEMS.map((s) => s.id)));
@@ -340,12 +341,14 @@ function ExtractionSummary() {
   const onImportClick = () => fileRef.current?.click();
   const onFile = async (f: File) => {
     setImportErr(null);
+    setMigrationsApplied([]);
     try {
       const text = await f.text();
       const json = JSON.parse(text);
-      const parsed = diagImportSchema.parse(json);
+      const { payload, applied } = runMigrations(json);
+      const parsed = diagImportSchema.parse(payload);
       if (parsed.meta.schemaVersion !== EXPORT_SCHEMA_VERSION) {
-        throw new Error(`Unsupported schema version ${parsed.meta.schemaVersion} (expected ${EXPORT_SCHEMA_VERSION})`);
+        throw new Error(`Migrated payload reports v${parsed.meta.schemaVersion}, expected v${EXPORT_SCHEMA_VERSION}`);
       }
       const ids = new Set(parsed.modules.map((m) => m.id));
       const unres = parsed.modules.flatMap((m) =>
@@ -364,6 +367,7 @@ function ExtractionSummary() {
         },
         unresolved: unres,
       });
+      setMigrationsApplied(applied);
     } catch (e) {
       setImportErr(e instanceof Error ? e.message : String(e));
     }
