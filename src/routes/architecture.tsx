@@ -231,11 +231,31 @@ function ExtractionSummary() {
     <div className="mt-10 rounded-lg border border-border bg-card p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-xl">Extraction diagnostics</h2>
-        <div className="text-[11px] text-muted-foreground">
-          Snapshot {date} ·{" "}
-          <a className="underline" target="_blank" rel="noreferrer" href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_BRANCH}`}>
-            {GITHUB_REPO}@{GITHUB_BRANCH}
-          </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 gap-1.5 text-[11px]"
+            onClick={() => downloadJson("swmm5plus-extraction.json", buildExportPayload())}
+          >
+            <Download className="h-3.5 w-3.5" />
+            JSON
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 gap-1.5 text-[11px]"
+            onClick={() => downloadCsv("swmm5plus-extraction.csv", buildExportCsvRows())}
+          >
+            <Download className="h-3.5 w-3.5" />
+            CSV
+          </Button>
+          <div className="text-[11px] text-muted-foreground">
+            Snapshot {date} ·{" "}
+            <a className="underline" target="_blank" rel="noreferrer" href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_BRANCH}`}>
+              {GITHUB_REPO}@{GITHUB_BRANCH}
+            </a>
+          </div>
         </div>
       </div>
       <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
