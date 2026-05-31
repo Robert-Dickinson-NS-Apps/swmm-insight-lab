@@ -123,6 +123,81 @@ const diagImportSchema = z.object({
   modules: z.array(autoModuleSchema),
 });
 
+/**
+ * Schema migrations. Each entry transforms a payload at version N into the
+ * shape expected by version N+1. The runner applies them in order until the
+ * payload matches `EXPORT_SCHEMA_VERSION`. Newer-than-current versions are
+ * rejected (we cannot migrate backwards safely).
+ *
+ * v0 (legacy / pre-versioned) → v1:
+ *   - Earlier dumps were either { nodes:[{name,path,line,uses:[{name,line,source,only}]}] }
+ *     (the raw extractor JSON) or a flat array of modules with no `meta`.
+ *     We synthesize a v1 `meta` block and reshape `nodes` → `modules`.
+ */
+type AnyJson = Record<string, unknown> & { meta?: { schemaVersion?: number } };
+const MIGRATIONS: Record<number, (input: AnyJson) => AnyJson> = {
+  0: (input) => {
+    const rawModules =
+      Array.isArray((input as { modules?: unknown }).modules) ? (input as { modules: unknown[] }).modules :
+      Array.isArray((input as { nodes?: unknown }).nodes)     ? (input as { nodes: unknown[] }).nodes :
+      Array.isArray(input)                                    ? (input as unknown as unknown[]) :
+      [];
+    const modules = rawModules.map((raw) => {
+      const m = raw as Record<string, unknown>;
+      const useDetails = Array.isArray(m.useDetails) ? m.useDetails
+        : Array.isArray(m.uses) && (m.uses as unknown[])[0] && typeof (m.uses as unknown[])[0] === "object"
+          ? (m.uses as unknown[]) : [];
+      const useNames = (useDetails as Array<{ name: string }>).map((u) => u.name);
+      return {
+        id: (m.id as string) ?? (m.name as string),
+        name: m.name as string,
+        path: m.path as string,
+        declaredLine: (m.declaredLine as number) ?? (m.line as number) ?? 1,
+        subsystem: (m.subsystem as string) ?? "utility",
+        uses: Array.isArray(m.uses) && typeof (m.uses as unknown[])[0] === "string"
+          ? (m.uses as string[]) : useNames,
+        useDetails,
+        summary: m.summary as string | undefined,
+      };
+    });
+    const prevMeta = (input.meta ?? {}) as Record<string, unknown>;
+    return {
+      meta: {
+        schemaVersion: 1,
+        generatedAt: (prevMeta.generatedAt as string) ?? new Date(0).toISOString(),
+        extractedAt: (prevMeta.extractedAt as string) ?? (prevMeta.generatedAt as string) ?? new Date(0).toISOString(),
+        repo: (prevMeta.repo as string) ?? GITHUB_REPO,
+        branch: (prevMeta.branch as string) ?? GITHUB_BRANCH,
+        extractorSettings: (prevMeta.extractorSettings as unknown) ?? EXTRACTOR_SETTINGS,
+      },
+      modules,
+    };
+  },
+  // Future: 1: (input) => ({ ...input, meta: { ...input.meta, schemaVersion: 2, newField: ... } }),
+};
+
+interface MigrationResult { payload: AnyJson; applied: string[] }
+function runMigrations(input: unknown): MigrationResult {
+  if (input == null || typeof input !== "object") throw new Error("Imported file is not a JSON object");
+  let payload = input as AnyJson;
+  let version = (payload.meta?.schemaVersion as number | undefined) ?? 0;
+  const applied: string[] = [];
+  if (version > EXPORT_SCHEMA_VERSION) {
+    throw new Error(`Schema v${version} is newer than this app supports (v${EXPORT_SCHEMA_VERSION}). Upgrade the viewer.`);
+  }
+  while (version < EXPORT_SCHEMA_VERSION) {
+    const migrate = MIGRATIONS[version];
+    if (!migrate) throw new Error(`No migration registered for schema v${version} → v${version + 1}`);
+    payload = migrate(payload);
+    applied.push(`v${version} → v${version + 1}`);
+    const nextVersion = (payload.meta?.schemaVersion as number | undefined) ?? (version + 1);
+    if (nextVersion <= version) throw new Error(`Migration v${version} did not advance schemaVersion`);
+    version = nextVersion;
+  }
+  return { payload, applied };
+}
+
+
 const searchSchema = z.object({
   module: fallback(z.string().optional(), undefined),
   src: fallback(z.enum(["auto", "curated"]).optional(), undefined),
