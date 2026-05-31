@@ -280,7 +280,7 @@ function ExtractionSummary() {
         }))
       );
       setImported({
-        meta: parsed.meta as ExportMeta,
+        meta: { extractorSettings: EXTRACTOR_SETTINGS, ...parsed.meta } as ExportMeta,
         modules: parsed.modules as AutoModule[],
         stats: {
           filesScanned: parsed.modules.length, modulesDeclared: parsed.modules.length,
