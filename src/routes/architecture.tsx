@@ -146,16 +146,16 @@ function ModuleDetail({ id, source }: { id: string; source: GraphSource }) {
         </div>
         <h3 className="mt-2 font-display text-2xl break-all">{m.name}</h3>
         <a
-          href={githubFileUrl(m.path)}
+          href={githubFileUrl(m.path, m.declaredLine)}
           target="_blank"
           rel="noreferrer"
           className="mt-1 inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground"
         >
-          <code>{m.path}</code>
+          <code>{m.path}:{m.declaredLine}</code>
           <ExternalLink className="h-3 w-3" />
         </a>
         {m.summary && <p className="mt-3 leading-relaxed">{m.summary}</p>}
-        <UseList label={`Uses (${m.uses.length})`} ids={m.uses} />
+        <ExtractionTrace mod={m} />
         <UseList label={`Used by (${incoming.length})`} ids={incoming.map((x) => x.id)} />
       </div>
     );
@@ -190,6 +190,67 @@ function ModuleDetail({ id, source }: { id: string; source: GraphSource }) {
       )}
       <UseList label={`Uses (${m.uses.length})`} ids={m.uses} />
       <UseList label={`Used by (${incoming.length})`} ids={incoming.map((x) => x.id)} />
+    </div>
+  );
+}
+
+function ExtractionTrace({ mod }: { mod: (typeof AUTO_MODULES)[number] }) {
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  if (mod.useDetails.length === 0) {
+    return (
+      <div className="mt-4 rounded border border-border bg-secondary/30 p-3 text-xs text-muted-foreground">
+        No <code className="rounded bg-muted px-1">use</code> statements detected in this file.
+      </div>
+    );
+  }
+  return (
+    <div className="mt-4">
+      <div className="flex items-baseline justify-between">
+        <div className="text-xs uppercase tracking-wider text-muted-foreground">
+          Extraction trace · {mod.useDetails.length} edge{mod.useDetails.length === 1 ? "" : "s"}
+        </div>
+        <div className="text-[10px] text-muted-foreground">line · source</div>
+      </div>
+      <ol className="mt-2 divide-y divide-border rounded border border-border bg-secondary/30 font-mono text-[11px]">
+        {mod.useDetails.map((e) => {
+          const known = ids.has(e.name);
+          return (
+            <li key={`${e.name}-${e.line}`} className="grid grid-cols-[44px_1fr] gap-2 px-2 py-1.5">
+              <a
+                href={githubFileUrl(mod.path, e.line)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-right text-muted-foreground hover:text-foreground"
+                title={`Open ${mod.path} at line ${e.line} on GitHub`}
+              >
+                L{e.line}
+              </a>
+              <div className="min-w-0">
+                <code className="block break-all">
+                  <span className="text-muted-foreground">use </span>
+                  <span className={known ? "text-foreground" : "text-destructive"}>{e.name}</span>
+                  {e.only && (
+                    <>
+                      <span className="text-muted-foreground">, only: </span>
+                      <span className="text-foreground/80">{e.only}</span>
+                    </>
+                  )}
+                </code>
+                {!known && (
+                  <div className="mt-0.5 text-[10px] font-sans text-destructive/80">
+                    target not found in extracted module set (excluded from graph)
+                  </div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="mt-2 text-[10px] text-muted-foreground">
+        Each row is a literal <code className="rounded bg-muted px-1">use</code> token matched by{" "}
+        <code className="rounded bg-muted px-1">/^\s*use\s+(\w+)(?:\s*,\s*only\s*:[^!]*)?/i</code>{" "}
+        after stripping <code className="rounded bg-muted px-1">!</code> comments. Click a line number to jump to it on GitHub.
+      </p>
     </div>
   );
 }
