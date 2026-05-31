@@ -1,5 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState, lazy, Suspense } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { lazy, Suspense, useCallback } from "react";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { SUBSYSTEMS, SUBSYSTEM_BY_ID, type SubsystemId } from "@/data/subsystems";
 import { MODULES, MODULES_BY_ID } from "@/data/modules";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +9,12 @@ import { Card } from "@/components/ui/card";
 
 const ModuleGraph = lazy(() => import("@/components/module-graph"));
 
+const searchSchema = z.object({
+  module: fallback(z.string().optional(), undefined),
+});
+
 export const Route = createFileRoute("/architecture")({
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "Architecture — SWMM5+ Repo Explorer" },
@@ -20,8 +27,19 @@ export const Route = createFileRoute("/architecture")({
 });
 
 function ArchitecturePage() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = selectedId ? MODULES_BY_ID[selectedId] : null;
+  const { module: selectedId } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
+  const selected = selectedId && MODULES_BY_ID[selectedId] ? MODULES_BY_ID[selectedId] : null;
+
+  const setSelectedId = useCallback(
+    (id: string | null) => {
+      navigate({
+        search: (prev) => ({ ...prev, module: id ?? undefined }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
