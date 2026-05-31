@@ -14,6 +14,90 @@ import { Button } from "@/components/ui/button";
 
 const ModuleGraph = lazy(() => import("@/components/module-graph"));
 
+function downloadJson(filename: string, data: unknown) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadCsv(filename: string, rows: string[][]) {
+  const escape = (cell: string) => {
+    const needsQuotes = /[",\n]/.test(cell);
+    return needsQuotes ? `"${cell.replace(/"/g, "\"\"")}"` : cell;
+  };
+  const csv = rows.map((r) => r.map(escape).join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function buildExportPayload() {
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  const unresolved = AUTO_MODULES.flatMap((m) =>
+    m.useDetails.filter((e) => !ids.has(e.name)).map((e) => ({
+      sourceModule: m.name,
+      sourcePath: m.path,
+      targetModule: e.name,
+      line: e.line,
+      only: e.only,
+      source: e.source,
+    }))
+  );
+  return {
+    meta: {
+      repo: GITHUB_REPO,
+      branch: GITHUB_BRANCH,
+      extractedAt: EXTRACTED_AT,
+    },
+    stats: {
+      filesScanned: AUTO_MODULES.length,
+      modulesDeclared: AUTO_MODULES.length,
+      useEdges: EDGE_COUNT,
+      unresolvedTargets: unresolved.length,
+    },
+    modules: AUTO_MODULES.map((m) => ({
+      id: m.id,
+      name: m.name,
+      path: m.path,
+      declaredLine: m.declaredLine,
+      subsystem: m.subsystem,
+      uses: m.uses,
+      useDetails: m.useDetails,
+      summary: m.summary,
+    })),
+    unresolved,
+  };
+}
+
+function buildExportCsvRows() {
+  const rows: string[][] = [
+    ["source_module", "source_path", "target_module", "line", "only_clause", "source_text", "resolved"],
+  ];
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  for (const m of AUTO_MODULES) {
+    for (const e of m.useDetails) {
+      rows.push([
+        m.name,
+        m.path,
+        e.name,
+        String(e.line),
+        e.only ?? "",
+        e.source,
+        ids.has(e.name) ? "yes" : "no",
+      ]);
+    }
+  }
+  return rows;
+}
+
 const searchSchema = z.object({
   module: fallback(z.string().optional(), undefined),
   src: fallback(z.enum(["auto", "curated"]).optional(), undefined),
