@@ -129,6 +129,81 @@ function ArchitecturePage() {
           )}
         </Card>
       </div>
+
+      <ExtractionSummary />
+    </div>
+  );
+}
+
+function ExtractionSummary() {
+  const ids = new Set(AUTO_MODULES.map((m) => m.id));
+  const allEdges = AUTO_MODULES.flatMap((m) => m.useDetails.map((e) => ({ from: m, edge: e })));
+  const unresolved = allEdges.filter((x) => !ids.has(x.edge.name));
+  const filesScanned = AUTO_MODULES.length;
+  const date = new Date(EXTRACTED_AT).toISOString().slice(0, 10);
+
+  return (
+    <div className="mt-10 rounded-lg border border-border bg-card p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-xl">Extraction diagnostics</h2>
+        <div className="text-[11px] text-muted-foreground">
+          Snapshot {date} ·{" "}
+          <a className="underline" target="_blank" rel="noreferrer" href={`https://github.com/${GITHUB_REPO}/tree/${GITHUB_BRANCH}`}>
+            {GITHUB_REPO}@{GITHUB_BRANCH}
+          </a>
+        </div>
+      </div>
+      <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
+        Relationships are mined from the Fortran sources by walking every <code className="rounded bg-muted px-1">.f90</code> file
+        under the eight subsystem directories, locating the file's <code className="rounded bg-muted px-1">module &lt;name&gt;</code>{" "}
+        declaration, and matching each <code className="rounded bg-muted px-1">use &lt;dep&gt;[, only: …]</code> token after stripping{" "}
+        <code className="rounded bg-muted px-1">!</code> comments. Click any module in the graph to inspect the per-line trace.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <Stat label="Files scanned" value={filesScanned.toString()} />
+        <Stat label="Modules declared" value={AUTO_MODULES.length.toString()} />
+        <Stat label="use edges" value={EDGE_COUNT.toString()} />
+        <Stat label="Unresolved targets" value={unresolved.length.toString()} tone={unresolved.length ? "warn" : "ok"} />
+      </div>
+
+      {unresolved.length > 0 && (
+        <div className="mt-5">
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">
+            Unresolved <code className="rounded bg-muted px-1">use</code> targets
+          </div>
+          <p className="mt-1 text-[11px] text-muted-foreground">
+            These names appear in a <code className="rounded bg-muted px-1">use</code> statement but no scanned <code className="rounded bg-muted px-1">.f90</code> file
+            declares a matching <code className="rounded bg-muted px-1">module</code> — typically Fortran intrinsics (<code className="rounded bg-muted px-1">iso_c_binding</code>) or external libs. They are excluded from the graph.
+          </p>
+          <ol className="mt-2 divide-y divide-border rounded border border-border bg-secondary/30 font-mono text-[11px]">
+            {unresolved.slice(0, 50).map((x, i) => (
+              <li key={i} className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 px-2 py-1.5">
+                <code className="truncate">
+                  <span className="text-destructive">{x.edge.name}</span>
+                  <span className="text-muted-foreground"> ← {x.from.path}</span>
+                </code>
+                <a
+                  href={githubFileUrl(x.from.path, x.edge.line)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  L{x.edge.line}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Stat({ label, value, tone }: { label: string; value: string; tone?: "ok" | "warn" }) {
+  return (
+    <div className="rounded border border-border bg-background p-3">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className={`mt-1 font-display text-2xl ${tone === "warn" ? "text-destructive" : ""}`}>{value}</div>
     </div>
   );
 }
