@@ -5,6 +5,19 @@ import type { SubsystemId } from "./subsystems";
 export const GITHUB_REPO = "CIMM-ORG/SWMM5plus";
 export const GITHUB_BRANCH = raw.branch;
 export const EXTRACTED_AT = raw.generatedAt;
+export const EXPORT_SCHEMA_VERSION = 1;
+
+export const EXTRACTOR_SETTINGS = {
+  fileGlob: "**/*.f90",
+  scannedDirs: [
+    "initialization", "interface", "geometry", "special_elements",
+    "timeloop", "definitions", "utility", "main",
+  ],
+  moduleDeclRegex: "/^\\s*module\\s+(\\w+)/i",
+  useStmtRegex: "/^\\s*use\\s+(\\w+)(?:\\s*,\\s*only\\s*:([^!]*))?/i",
+  commentStripChar: "!",
+  caseFolding: "lowercase-module-ids",
+} as const;
 
 export function githubFileUrl(path: string, line?: number) {
   const base = `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
