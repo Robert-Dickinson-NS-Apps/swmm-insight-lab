@@ -1,0 +1,956 @@
+{
+  "repo": "CIMM-ORG/SWMM5plus",
+  "branch": "development",
+  "generatedAt": "2026-05-31T04:43:28.883Z",
+  "nodes": [
+    {
+      "name": "adjust",
+      "path": "timeloop/adjust.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "pack_mask_arrays",
+        "preissmann_slot",
+        "utility",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "air_entrapment",
+      "path": "timeloop/air_entrapment.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "face",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "bipquick",
+      "path": "initialization/BIPquick.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_settings",
+        "discretization",
+        "utility",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "boundary_conditions",
+      "path": "timeloop/boundary_conditions.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "face",
+        "geometry",
+        "interface_",
+        "utility",
+        "utility_crash",
+        "utility_datetime",
+        "utility_interpolate",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "c_library",
+      "path": "interface/c_library.f90",
+      "uses": [
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "circular_conduit",
+      "path": "geometry/circular_conduit.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "common_elements",
+      "path": "special_elements/common_elements.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "control_hydraulics",
+      "path": "special_elements/control_hydraulics.f90",
+      "uses": [
+        "adjust",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "interface_",
+        "orifice_elements",
+        "outlet_elements",
+        "pump_elements",
+        "utility",
+        "utility_allocate",
+        "utility_crash",
+        "weir_elements"
+      ]
+    },
+    {
+      "name": "culvert_elements",
+      "path": "special_elements/culvert_elements.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "geometry_lowlevel",
+        "utility_crash",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "define_api_keys",
+      "path": "definitions/define_api_keys.f90",
+      "uses": []
+    },
+    {
+      "name": "define_globals",
+      "path": "definitions/define_globals.f90",
+      "uses": [
+        "define_api_keys",
+        "define_types"
+      ]
+    },
+    {
+      "name": "define_indexes",
+      "path": "definitions/define_indexes.f90",
+      "uses": [
+        "define_globals"
+      ]
+    },
+    {
+      "name": "define_keys",
+      "path": "definitions/define_keys.f90",
+      "uses": [
+        "define_globals"
+      ]
+    },
+    {
+      "name": "define_settings",
+      "path": "definitions/define_settings.f90",
+      "uses": [
+        "define_globals",
+        "define_keys",
+        "utility_string"
+      ]
+    },
+    {
+      "name": "define_types",
+      "path": "definitions/define_types.f90",
+      "uses": []
+    },
+    {
+      "name": "define_xsect_tables",
+      "path": "definitions/define_xsect_tables.f90",
+      "uses": []
+    },
+    {
+      "name": "diagnostic_elements",
+      "path": "special_elements/diagnostic_elements.f90",
+      "uses": [
+        "adjust",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "face",
+        "orifice_elements",
+        "outlet_elements",
+        "pump_elements",
+        "utility_crash",
+        "utility_profiler",
+        "weir_elements"
+      ]
+    },
+    {
+      "name": "discretization",
+      "path": "initialization/discretization.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "face",
+      "path": "timeloop/face.f90",
+      "uses": [
+        "adjust",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry",
+        "jump",
+        "pack_mask_arrays",
+        "update",
+        "utility_crash",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "filled_circular_conduit",
+      "path": "geometry/filled_circular_conduit.f90",
+      "uses": [
+        "circular_conduit",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "finalization",
+      "path": "main/finalization.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_settings",
+        "interface_",
+        "output",
+        "utility",
+        "utility_crash",
+        "utility_datetime",
+        "utility_deallocate",
+        "utility_files",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "forcemain",
+      "path": "geometry/forcemain.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash",
+        "utility_output"
+      ]
+    },
+    {
+      "name": "geometry",
+      "path": "geometry/geometry.f90",
+      "uses": [
+        "adjust",
+        "circular_conduit",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "filled_circular_conduit",
+        "geometry_lowlevel",
+        "irregular_channel",
+        "mod_basket_conduit",
+        "parabolic_channel",
+        "powerfunction_channel",
+        "preissmann_slot",
+        "rectangular_channel",
+        "rectangular_conduit",
+        "rectangular_round_conduit",
+        "rectangular_triangular_conduit",
+        "storage_geometry",
+        "trapezoidal_channel",
+        "triangular_channel",
+        "utility_crash",
+        "utility_profiler",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "geometry_lowlevel",
+      "path": "geometry/geometry_lowlevel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "utility_crash",
+        "utility_profiler",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "ic_lowlevel",
+      "path": "initialization/ic_lowlevel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "geometry",
+        "geometry_lowlevel",
+        "interface_",
+        "orifice_elements",
+        "storage_geometry",
+        "utility",
+        "utility_crash",
+        "utility_interpolate",
+        "weir_elements"
+      ]
+    },
+    {
+      "name": "initial_condition",
+      "path": "initialization/initial_condition.f90",
+      "uses": [
+        "adjust",
+        "boundary_conditions",
+        "circular_conduit",
+        "control_hydraulics",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "diagnostic_elements",
+        "face",
+        "filled_circular_conduit",
+        "forcemain",
+        "geometry",
+        "geometry_lowlevel",
+        "ic_lowlevel",
+        "interface_",
+        "irregular_channel",
+        "junction_lowlevel",
+        "pack_mask_arrays",
+        "preissmann_slot",
+        "storage_geometry",
+        "update",
+        "utility",
+        "utility_allocate",
+        "utility_crash",
+        "utility_deallocate",
+        "utility_interpolate",
+        "utility_key_default",
+        "utility_profiler",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "initialization",
+      "path": "initialization/initialization.f90",
+      "uses": [
+        "boundary_conditions",
+        "culvert_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "discretization",
+        "initial_condition",
+        "interface_",
+        "network_define",
+        "output",
+        "pack_mask_arrays",
+        "partitioning",
+        "utility",
+        "utility_allocate",
+        "utility_array",
+        "utility_crash",
+        "utility_datetime",
+        "utility_files",
+        "utility_key_default",
+        "utility_output",
+        "utility_profiler",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "interface_",
+      "path": "interface/interface.f90",
+      "uses": [
+        "c_library",
+        "define_api_keys",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash",
+        "utility_datetime"
+      ]
+    },
+    {
+      "name": "irregular_channel",
+      "path": "geometry/irregular_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "jump",
+      "path": "special_elements/jump.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "junction_elements",
+      "path": "timeloop/junction_elements.f90",
+      "uses": [
+        "adjust",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "diagnostic_elements",
+        "face",
+        "geometry",
+        "geometry_lowlevel",
+        "junction_lowlevel",
+        "pack_mask_arrays",
+        "preissmann_slot",
+        "update",
+        "utility_crash",
+        "utility_unit_testing"
+      ]
+    },
+    {
+      "name": "junction_lowlevel",
+      "path": "timeloop/junction_lowlevel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "face",
+        "geometry",
+        "geometry_lowlevel",
+        "storage_geometry",
+        "update",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "mod_basket_conduit",
+      "path": "geometry/mod_basket_conduit.f90",
+      "uses": [
+        "circular_conduit",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "network_define",
+      "path": "initialization/network_define.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "discretization",
+        "interface_",
+        "utility",
+        "utility_allocate",
+        "utility_crash",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "orifice_elements",
+      "path": "special_elements/orifice_elements.f90",
+      "uses": [
+        "adjust",
+        "common_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "geometry_lowlevel",
+        "irregular_channel",
+        "utility_crash",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "outlet_elements",
+      "path": "special_elements/outlet_elements.f90",
+      "uses": [
+        "adjust",
+        "common_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash",
+        "utility_interpolate"
+      ]
+    },
+    {
+      "name": "output",
+      "path": "main/output.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_types",
+        "interface_",
+        "utility_allocate",
+        "utility_crash",
+        "utility_datetime",
+        "utility_deallocate"
+      ]
+    },
+    {
+      "name": "pack_mask_arrays",
+      "path": "initialization/pack_mask_arrays.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "parabolic_channel",
+      "path": "geometry/parabolic_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel"
+      ]
+    },
+    {
+      "name": "partitioning",
+      "path": "initialization/partitioning.f90",
+      "uses": [
+        "bipquick",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "discretization",
+        "utility",
+        "utility_allocate",
+        "utility_array",
+        "utility_crash",
+        "utility_deallocate",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "powerfunction_channel",
+      "path": "geometry/powerfunction_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel"
+      ]
+    },
+    {
+      "name": "preissmann_slot",
+      "path": "timeloop/preissmann_slot.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "pump_elements",
+      "path": "special_elements/pump_elements.f90",
+      "uses": [
+        "adjust",
+        "common_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash",
+        "utility_interpolate"
+      ]
+    },
+    {
+      "name": "rectangular_channel",
+      "path": "geometry/rectangular_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel"
+      ]
+    },
+    {
+      "name": "rectangular_conduit",
+      "path": "geometry/rectangular_conduit.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings"
+      ]
+    },
+    {
+      "name": "rectangular_round_conduit",
+      "path": "geometry/rectangular_round_conduit.f90",
+      "uses": [
+        "circular_conduit",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_xsect_tables",
+        "xsect_tables"
+      ]
+    },
+    {
+      "name": "rectangular_triangular_conduit",
+      "path": "geometry/rectangular_triangular_conduit.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings"
+      ]
+    },
+    {
+      "name": "rk2_lowlevel",
+      "path": "timeloop/rk2_lowlevel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry",
+        "utility_crash",
+        "utility_output"
+      ]
+    },
+    {
+      "name": "roadway_weir_elements",
+      "path": "special_elements/roadway_weir_elements.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "runge_kutta2",
+      "path": "timeloop/runge_kutta2.f90",
+      "uses": [
+        "adjust",
+        "air_entrapment",
+        "culvert_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "diagnostic_elements",
+        "face",
+        "forcemain",
+        "geometry",
+        "geometry_lowlevel",
+        "junction_elements",
+        "pack_mask_arrays",
+        "rk2_lowlevel",
+        "storage_geometry",
+        "update",
+        "utility_crash",
+        "utility_unit_testing"
+      ]
+    },
+    {
+      "name": "storage_geometry",
+      "path": "geometry/storage_geometry.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility",
+        "utility_allocate",
+        "utility_interpolate"
+      ]
+    },
+    {
+      "name": "timeloop",
+      "path": "timeloop/timeloop.f90",
+      "uses": [
+        "boundary_conditions",
+        "control_hydraulics",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "interface_",
+        "output",
+        "pack_mask_arrays",
+        "runge_kutta2",
+        "utility",
+        "utility_crash",
+        "utility_datetime",
+        "utility_output",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "trapezoidal_channel",
+      "path": "geometry/trapezoidal_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel"
+      ]
+    },
+    {
+      "name": "triangular_channel",
+      "path": "geometry/triangular_channel.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry_lowlevel"
+      ]
+    },
+    {
+      "name": "update",
+      "path": "timeloop/update.f90",
+      "uses": [
+        "adjust",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "geometry",
+        "storage_geometry",
+        "utility_crash",
+        "utility_profiler"
+      ]
+    },
+    {
+      "name": "utility",
+      "path": "utility/utility.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_allocate",
+      "path": "utility/utility_allocate.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "interface_",
+        "utility",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_array",
+      "path": "utility/utility_array.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_allocate",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_crash",
+      "path": "utility/utility_crash.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings"
+      ]
+    },
+    {
+      "name": "utility_datetime",
+      "path": "utility/utility_datetime.f90",
+      "uses": [
+        "define_api_keys",
+        "define_globals",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_deallocate",
+      "path": "utility/utility_deallocate.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_debug",
+      "path": "utility/utility_debug.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings"
+      ]
+    },
+    {
+      "name": "utility_files",
+      "path": "utility/utility_files.f90",
+      "uses": [
+        "define_settings",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_interpolate",
+      "path": "utility/utility_interpolate.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "utility_allocate",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "utility_key_default",
+      "path": "utility/utility_key_default.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings"
+      ]
+    },
+    {
+      "name": "utility_output",
+      "path": "utility/utility_output.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "define_types"
+      ]
+    },
+    {
+      "name": "utility_profiler",
+      "path": "utility/utility_profiler.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes"
+      ]
+    },
+    {
+      "name": "utility_string",
+      "path": "utility/utility_string.f90",
+      "uses": []
+    },
+    {
+      "name": "utility_unit_testing",
+      "path": "utility/utility_unit_testing.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "discretization",
+        "interface_",
+        "storage_geometry",
+        "utility_allocate",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "weir_elements",
+      "path": "special_elements/weir_elements.f90",
+      "uses": [
+        "adjust",
+        "common_elements",
+        "define_globals",
+        "define_indexes",
+        "define_keys",
+        "define_settings",
+        "roadway_weir_elements",
+        "utility_crash"
+      ]
+    },
+    {
+      "name": "xsect_tables",
+      "path": "geometry/xsect_tables.f90",
+      "uses": [
+        "define_globals",
+        "define_indexes",
+        "define_settings",
+        "define_xsect_tables",
+        "utility_crash"
+      ]
+    }
+  ]
+}
