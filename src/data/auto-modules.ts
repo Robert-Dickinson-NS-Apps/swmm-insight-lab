@@ -6,21 +6,40 @@ export const GITHUB_REPO = "CIMM-ORG/SWMM5plus";
 export const GITHUB_BRANCH = raw.branch;
 export const EXTRACTED_AT = raw.generatedAt;
 
-export function githubFileUrl(path: string) {
-  return `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+export function githubFileUrl(path: string, line?: number) {
+  const base = `https://github.com/${GITHUB_REPO}/blob/${GITHUB_BRANCH}/${path}`;
+  return line ? `${base}#L${line}` : base;
+}
+
+export function rawFileUrl(path: string) {
+  return `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`;
+}
+
+export interface UseEdge {
+  /** Target module id (lowercased name) */
+  name: string;
+  /** 1-based line number of the `use` statement in the source file */
+  line: number;
+  /** Verbatim trimmed source line that introduced the dependency */
+  source: string;
+  /** `only:` clause, if present */
+  only: string | null;
 }
 
 export interface AutoModule {
   id: string;
   name: string;
   path: string;
+  /** 1-based line of the `module <name>` declaration */
+  declaredLine: number;
   subsystem: SubsystemId;
+  /** Names only — kept for back-compat with graph/list rendering */
   uses: string[];
-  /** Optional curated summary if we have one for this module id */
+  /** Full extraction detail per `use` statement */
+  useDetails: UseEdge[];
   summary?: string;
 }
 
-/** Map a file path prefix to a subsystem id. */
 function subsystemFor(path: string): SubsystemId {
   const dir = path.split("/")[0];
   switch (dir) {
@@ -28,7 +47,7 @@ function subsystemFor(path: string): SubsystemId {
     case "interface":        return "interface";
     case "geometry":         return "network";
     case "special_elements": return "hydraulics";
-    case "timeloop":         return "hydraulics"; // most files are solver; timeloop.f90 itself is overridden
+    case "timeloop":         return "hydraulics";
     case "definitions":      return "utility";
     case "utility":          return "utility";
     case "main":             return "output";
@@ -44,8 +63,9 @@ const PATH_OVERRIDES: Record<string, SubsystemId> = {
   "definitions/define_xsect_tables.f90": "network",
 };
 
-interface Raw { name: string; path: string; uses: string[] }
-const nodes: Raw[] = raw.nodes;
+interface RawUse { name: string; line: number; source: string; only: string | null }
+interface RawNode { name: string; path: string; line: number; uses: RawUse[] }
+const nodes: RawNode[] = raw.nodes as RawNode[];
 
 export const AUTO_MODULES: AutoModule[] = nodes.map((n) => {
   const id = n.name;
@@ -54,8 +74,10 @@ export const AUTO_MODULES: AutoModule[] = nodes.map((n) => {
     id,
     name: n.name,
     path: n.path,
+    declaredLine: n.line,
     subsystem: PATH_OVERRIDES[n.path] ?? subsystemFor(n.path),
-    uses: n.uses,
+    uses: n.uses.map((u) => u.name),
+    useDetails: n.uses,
     summary: curated?.summary,
   };
 });
