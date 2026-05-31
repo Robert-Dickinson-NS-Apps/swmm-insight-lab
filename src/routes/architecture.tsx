@@ -445,6 +445,11 @@ function ExtractionSummary() {
           Import failed: {importErr}
         </div>
       )}
+      {imported && migrationsApplied.length > 0 && (
+        <div className="mt-3 rounded border border-border bg-secondary/40 px-3 py-2 text-xs text-muted-foreground">
+          Migrated imported snapshot: {migrationsApplied.join(" → ")} (now schema v{EXPORT_SCHEMA_VERSION}).
+        </div>
+      )}
 
       <p className="mt-3 max-w-3xl text-sm text-muted-foreground">
         Relationships are mined from the Fortran sources by walking every <code className="rounded bg-muted px-1">.f90</code> file
