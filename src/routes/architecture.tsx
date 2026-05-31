@@ -398,7 +398,8 @@ function ExtractionSummary() {
             <Upload className="h-3.5 w-3.5" /> Import JSON
           </Button>
           {imported && (
-            <Button variant="ghost" size="sm" className="h-7 gap-1 text-[11px]" onClick={() => { setImported(null); setImportErr(null); }}>
+            <Button variant="ghost" size="sm" className="h-7 gap-1 text-[11px]"
+              onClick={() => { setImported(null); setImportErr(null); setMigrationsApplied([]); }}>
               <X className="h-3.5 w-3.5" /> Clear
             </Button>
           )}
