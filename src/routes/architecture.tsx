@@ -9,7 +9,8 @@ import type { GraphSource } from "@/components/module-graph";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ModuleGraph = lazy(() => import("@/components/module-graph"));
 
