@@ -1,955 +1,3703 @@
 {
   "repo": "CIMM-ORG/SWMM5plus",
   "branch": "development",
-  "generatedAt": "2026-05-31T04:43:28.883Z",
+  "generatedAt": "2026-05-31T12:41:46.393Z",
   "nodes": [
-    {
-      "name": "adjust",
-      "path": "timeloop/adjust.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "pack_mask_arrays",
-        "preissmann_slot",
-        "utility",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "air_entrapment",
-      "path": "timeloop/air_entrapment.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "face",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "bipquick",
-      "path": "initialization/BIPquick.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_settings",
-        "discretization",
-        "utility",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "boundary_conditions",
-      "path": "timeloop/boundary_conditions.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "face",
-        "geometry",
-        "interface_",
-        "utility",
-        "utility_crash",
-        "utility_datetime",
-        "utility_interpolate",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "c_library",
-      "path": "interface/c_library.f90",
-      "uses": [
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "circular_conduit",
-      "path": "geometry/circular_conduit.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "common_elements",
-      "path": "special_elements/common_elements.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "control_hydraulics",
-      "path": "special_elements/control_hydraulics.f90",
-      "uses": [
-        "adjust",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "interface_",
-        "orifice_elements",
-        "outlet_elements",
-        "pump_elements",
-        "utility",
-        "utility_allocate",
-        "utility_crash",
-        "weir_elements"
-      ]
-    },
-    {
-      "name": "culvert_elements",
-      "path": "special_elements/culvert_elements.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "geometry_lowlevel",
-        "utility_crash",
-        "xsect_tables"
-      ]
-    },
     {
       "name": "define_api_keys",
       "path": "definitions/define_api_keys.f90",
+      "line": 1,
       "uses": []
     },
     {
       "name": "define_globals",
       "path": "definitions/define_globals.f90",
+      "line": 1,
       "uses": [
-        "define_api_keys",
-        "define_types"
+        {
+          "name": "define_types",
+          "line": 20,
+          "source": "use define_types",
+          "only": null
+        },
+        {
+          "name": "define_api_keys",
+          "line": 21,
+          "source": "use define_api_keys",
+          "only": null
+        }
       ]
     },
     {
       "name": "define_indexes",
       "path": "definitions/define_indexes.f90",
+      "line": 1,
       "uses": [
-        "define_globals"
+        {
+          "name": "define_globals",
+          "line": 24,
+          "source": "use define_globals",
+          "only": null
+        }
       ]
     },
     {
       "name": "define_keys",
       "path": "definitions/define_keys.f90",
+      "line": 1,
       "uses": [
-        "define_globals"
+        {
+          "name": "define_globals",
+          "line": 29,
+          "source": "use define_globals, only: reverseKey",
+          "only": "reverseKey"
+        }
       ]
     },
     {
       "name": "define_settings",
       "path": "definitions/define_settings.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_keys",
-        "utility_string"
+        {
+          "name": "json_module",
+          "line": 27,
+          "source": "use json_module",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 28,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 29,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "utility_string",
+          "line": 30,
+          "source": "use utility_string, only: util_lower_case",
+          "only": "util_lower_case"
+        }
       ]
     },
     {
       "name": "define_types",
       "path": "definitions/define_types.f90",
+      "line": 1,
       "uses": []
     },
     {
       "name": "define_xsect_tables",
       "path": "definitions/define_xsect_tables.f90",
+      "line": 1,
       "uses": []
     },
     {
-      "name": "diagnostic_elements",
-      "path": "special_elements/diagnostic_elements.f90",
+      "name": "circular_conduit",
+      "path": "geometry/circular_conduit.f90",
+      "line": 1,
       "uses": [
-        "adjust",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "face",
-        "orifice_elements",
-        "outlet_elements",
-        "pump_elements",
-        "utility_crash",
-        "utility_profiler",
-        "weir_elements"
-      ]
-    },
-    {
-      "name": "discretization",
-      "path": "initialization/discretization.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "face",
-      "path": "timeloop/face.f90",
-      "uses": [
-        "adjust",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry",
-        "jump",
-        "pack_mask_arrays",
-        "update",
-        "utility_crash",
-        "utility_profiler"
+        {
+          "name": "define_settings",
+          "line": 13,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 15,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 17,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 18,
+          "source": "use xsect_tables",
+          "only": null
+        }
       ]
     },
     {
       "name": "filled_circular_conduit",
       "path": "geometry/filled_circular_conduit.f90",
+      "line": 1,
       "uses": [
-        "circular_conduit",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "finalization",
-      "path": "main/finalization.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_settings",
-        "interface_",
-        "output",
-        "utility",
-        "utility_crash",
-        "utility_datetime",
-        "utility_deallocate",
-        "utility_files",
-        "utility_profiler"
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 16,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "circular_conduit",
+          "line": 17,
+          "source": "use circular_conduit, only: circular_get_normalized_depth_from_area_analytical",
+          "only": "circular_get_normalized_depth_from_area_analytical"
+        },
+        {
+          "name": "xsect_tables",
+          "line": 18,
+          "source": "use xsect_tables",
+          "only": null
+        }
       ]
     },
     {
       "name": "forcemain",
       "path": "geometry/forcemain.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash",
-        "utility_output"
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "utility_output",
+          "line": 17,
+          "source": "use utility_output",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 18,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
       ]
     },
     {
       "name": "geometry",
       "path": "geometry/geometry.f90",
+      "line": 1,
       "uses": [
-        "adjust",
-        "circular_conduit",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "filled_circular_conduit",
-        "geometry_lowlevel",
-        "irregular_channel",
-        "mod_basket_conduit",
-        "parabolic_channel",
-        "powerfunction_channel",
-        "preissmann_slot",
-        "rectangular_channel",
-        "rectangular_conduit",
-        "rectangular_round_conduit",
-        "rectangular_triangular_conduit",
-        "storage_geometry",
-        "trapezoidal_channel",
-        "triangular_channel",
-        "utility_crash",
-        "utility_profiler",
-        "xsect_tables"
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 15,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 18,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 19,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "preissmann_slot",
+          "line": 20,
+          "source": "use preissmann_slot",
+          "only": null
+        },
+        {
+          "name": "parabolic_channel",
+          "line": 21,
+          "source": "use parabolic_channel",
+          "only": null
+        },
+        {
+          "name": "powerfunction_channel",
+          "line": 22,
+          "source": "use powerfunction_channel",
+          "only": null
+        },
+        {
+          "name": "irregular_channel",
+          "line": 23,
+          "source": "use irregular_channel",
+          "only": null
+        },
+        {
+          "name": "rectangular_channel",
+          "line": 24,
+          "source": "use rectangular_channel",
+          "only": null
+        },
+        {
+          "name": "rectangular_conduit",
+          "line": 25,
+          "source": "use rectangular_conduit",
+          "only": null
+        },
+        {
+          "name": "trapezoidal_channel",
+          "line": 26,
+          "source": "use trapezoidal_channel",
+          "only": null
+        },
+        {
+          "name": "triangular_channel",
+          "line": 27,
+          "source": "use triangular_channel",
+          "only": null
+        },
+        {
+          "name": "circular_conduit",
+          "line": 31,
+          "source": "use circular_conduit",
+          "only": null
+        },
+        {
+          "name": "filled_circular_conduit",
+          "line": 33,
+          "source": "use filled_circular_conduit",
+          "only": null
+        },
+        {
+          "name": "mod_basket_conduit",
+          "line": 37,
+          "source": "use mod_basket_conduit",
+          "only": null
+        },
+        {
+          "name": "rectangular_round_conduit",
+          "line": 38,
+          "source": "use rectangular_round_conduit",
+          "only": null
+        },
+        {
+          "name": "rectangular_triangular_conduit",
+          "line": 39,
+          "source": "use rectangular_triangular_conduit",
+          "only": null
+        },
+        {
+          "name": "storage_geometry",
+          "line": 43,
+          "source": "use storage_geometry",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 45,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 46,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 47,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 48,
+          "source": "use utility_crash",
+          "only": null
+        }
       ]
     },
     {
       "name": "geometry_lowlevel",
       "path": "geometry/geometry_lowlevel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "utility_crash",
-        "utility_profiler",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "ic_lowlevel",
-      "path": "initialization/ic_lowlevel.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "geometry",
-        "geometry_lowlevel",
-        "interface_",
-        "orifice_elements",
-        "storage_geometry",
-        "utility",
-        "utility_crash",
-        "utility_interpolate",
-        "weir_elements"
-      ]
-    },
-    {
-      "name": "initial_condition",
-      "path": "initialization/initial_condition.f90",
-      "uses": [
-        "adjust",
-        "boundary_conditions",
-        "circular_conduit",
-        "control_hydraulics",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "diagnostic_elements",
-        "face",
-        "filled_circular_conduit",
-        "forcemain",
-        "geometry",
-        "geometry_lowlevel",
-        "ic_lowlevel",
-        "interface_",
-        "irregular_channel",
-        "junction_lowlevel",
-        "pack_mask_arrays",
-        "preissmann_slot",
-        "storage_geometry",
-        "update",
-        "utility",
-        "utility_allocate",
-        "utility_crash",
-        "utility_deallocate",
-        "utility_interpolate",
-        "utility_key_default",
-        "utility_profiler",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "initialization",
-      "path": "initialization/initialization.f90",
-      "uses": [
-        "boundary_conditions",
-        "culvert_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "discretization",
-        "initial_condition",
-        "interface_",
-        "network_define",
-        "output",
-        "pack_mask_arrays",
-        "partitioning",
-        "utility",
-        "utility_allocate",
-        "utility_array",
-        "utility_crash",
-        "utility_datetime",
-        "utility_files",
-        "utility_key_default",
-        "utility_output",
-        "utility_profiler",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "interface_",
-      "path": "interface/interface.f90",
-      "uses": [
-        "c_library",
-        "define_api_keys",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash",
-        "utility_datetime"
+        {
+          "name": "define_globals",
+          "line": 22,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 23,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 24,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 25,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 26,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 27,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 29,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 30,
+          "source": "use utility_crash",
+          "only": null
+        }
       ]
     },
     {
       "name": "irregular_channel",
       "path": "geometry/irregular_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "jump",
-      "path": "special_elements/jump.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "junction_elements",
-      "path": "timeloop/junction_elements.f90",
-      "uses": [
-        "adjust",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "diagnostic_elements",
-        "face",
-        "geometry",
-        "geometry_lowlevel",
-        "junction_lowlevel",
-        "pack_mask_arrays",
-        "preissmann_slot",
-        "update",
-        "utility_crash",
-        "utility_unit_testing"
-      ]
-    },
-    {
-      "name": "junction_lowlevel",
-      "path": "timeloop/junction_lowlevel.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "face",
-        "geometry",
-        "geometry_lowlevel",
-        "storage_geometry",
-        "update",
-        "utility_crash"
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 16,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 17,
+          "source": "use xsect_tables",
+          "only": null
+        }
       ]
     },
     {
       "name": "mod_basket_conduit",
       "path": "geometry/mod_basket_conduit.f90",
+      "line": 1,
       "uses": [
-        "circular_conduit",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "network_define",
-      "path": "initialization/network_define.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "discretization",
-        "interface_",
-        "utility",
-        "utility_allocate",
-        "utility_crash",
-        "utility_profiler"
-      ]
-    },
-    {
-      "name": "orifice_elements",
-      "path": "special_elements/orifice_elements.f90",
-      "uses": [
-        "adjust",
-        "common_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "geometry_lowlevel",
-        "irregular_channel",
-        "utility_crash",
-        "xsect_tables"
-      ]
-    },
-    {
-      "name": "outlet_elements",
-      "path": "special_elements/outlet_elements.f90",
-      "uses": [
-        "adjust",
-        "common_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash",
-        "utility_interpolate"
-      ]
-    },
-    {
-      "name": "output",
-      "path": "main/output.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_types",
-        "interface_",
-        "utility_allocate",
-        "utility_crash",
-        "utility_datetime",
-        "utility_deallocate"
-      ]
-    },
-    {
-      "name": "pack_mask_arrays",
-      "path": "initialization/pack_mask_arrays.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility",
-        "utility_crash"
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 16,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 17,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "circular_conduit",
+          "line": 18,
+          "source": "use circular_conduit, only: circular_get_normalized_depth_from_area_analytical",
+          "only": "circular_get_normalized_depth_from_area_analytical"
+        }
       ]
     },
     {
       "name": "parabolic_channel",
       "path": "geometry/parabolic_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel"
-      ]
-    },
-    {
-      "name": "partitioning",
-      "path": "initialization/partitioning.f90",
-      "uses": [
-        "bipquick",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "discretization",
-        "utility",
-        "utility_allocate",
-        "utility_array",
-        "utility_crash",
-        "utility_deallocate",
-        "utility_profiler"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 15,
+          "source": "use geometry_lowlevel",
+          "only": null
+        }
       ]
     },
     {
       "name": "powerfunction_channel",
       "path": "geometry/powerfunction_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel"
-      ]
-    },
-    {
-      "name": "preissmann_slot",
-      "path": "timeloop/preissmann_slot.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "pump_elements",
-      "path": "special_elements/pump_elements.f90",
-      "uses": [
-        "adjust",
-        "common_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash",
-        "utility_interpolate"
+        {
+          "name": "define_settings",
+          "line": 14,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 17,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 18,
+          "source": "use geometry_lowlevel",
+          "only": null
+        }
       ]
     },
     {
       "name": "rectangular_channel",
       "path": "geometry/rectangular_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 15,
+          "source": "use geometry_lowlevel",
+          "only": null
+        }
       ]
     },
     {
       "name": "rectangular_conduit",
       "path": "geometry/rectangular_conduit.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        }
       ]
     },
     {
       "name": "rectangular_round_conduit",
       "path": "geometry/rectangular_round_conduit.f90",
+      "line": 1,
       "uses": [
-        "circular_conduit",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_xsect_tables",
-        "xsect_tables"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 15,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 16,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "circular_conduit",
+          "line": 17,
+          "source": "use circular_conduit, only: circular_get_normalized_depth_from_area_analytical",
+          "only": "circular_get_normalized_depth_from_area_analytical"
+        }
       ]
     },
     {
       "name": "rectangular_triangular_conduit",
       "path": "geometry/rectangular_triangular_conduit.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings"
-      ]
-    },
-    {
-      "name": "rk2_lowlevel",
-      "path": "timeloop/rk2_lowlevel.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry",
-        "utility_crash",
-        "utility_output"
-      ]
-    },
-    {
-      "name": "roadway_weir_elements",
-      "path": "special_elements/roadway_weir_elements.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "runge_kutta2",
-      "path": "timeloop/runge_kutta2.f90",
-      "uses": [
-        "adjust",
-        "air_entrapment",
-        "culvert_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "diagnostic_elements",
-        "face",
-        "forcemain",
-        "geometry",
-        "geometry_lowlevel",
-        "junction_elements",
-        "pack_mask_arrays",
-        "rk2_lowlevel",
-        "storage_geometry",
-        "update",
-        "utility_crash",
-        "utility_unit_testing"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        }
       ]
     },
     {
       "name": "storage_geometry",
       "path": "geometry/storage_geometry.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility",
-        "utility_allocate",
-        "utility_interpolate"
-      ]
-    },
-    {
-      "name": "timeloop",
-      "path": "timeloop/timeloop.f90",
-      "uses": [
-        "boundary_conditions",
-        "control_hydraulics",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "interface_",
-        "output",
-        "pack_mask_arrays",
-        "runge_kutta2",
-        "utility",
-        "utility_crash",
-        "utility_datetime",
-        "utility_output",
-        "utility_profiler"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 15,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 16,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 17,
+          "source": "use utility, only : util_linspace !",
+          "only": "util_linspace"
+        }
       ]
     },
     {
       "name": "trapezoidal_channel",
       "path": "geometry/trapezoidal_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 15,
+          "source": "use geometry_lowlevel",
+          "only": null
+        }
       ]
     },
     {
       "name": "triangular_channel",
       "path": "geometry/triangular_channel.f90",
+      "line": 1,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry_lowlevel"
-      ]
-    },
-    {
-      "name": "update",
-      "path": "timeloop/update.f90",
-      "uses": [
-        "adjust",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "geometry",
-        "storage_geometry",
-        "utility_crash",
-        "utility_profiler"
-      ]
-    },
-    {
-      "name": "utility",
-      "path": "utility/utility.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_allocate",
-      "path": "utility/utility_allocate.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "interface_",
-        "utility",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_array",
-      "path": "utility/utility_array.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_allocate",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_crash",
-      "path": "utility/utility_crash.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings"
-      ]
-    },
-    {
-      "name": "utility_datetime",
-      "path": "utility/utility_datetime.f90",
-      "uses": [
-        "define_api_keys",
-        "define_globals",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_deallocate",
-      "path": "utility/utility_deallocate.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_debug",
-      "path": "utility/utility_debug.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings"
-      ]
-    },
-    {
-      "name": "utility_files",
-      "path": "utility/utility_files.f90",
-      "uses": [
-        "define_settings",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_interpolate",
-      "path": "utility/utility_interpolate.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "utility_allocate",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "utility_key_default",
-      "path": "utility/utility_key_default.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings"
-      ]
-    },
-    {
-      "name": "utility_output",
-      "path": "utility/utility_output.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "define_types"
-      ]
-    },
-    {
-      "name": "utility_profiler",
-      "path": "utility/utility_profiler.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes"
-      ]
-    },
-    {
-      "name": "utility_string",
-      "path": "utility/utility_string.f90",
-      "uses": []
-    },
-    {
-      "name": "utility_unit_testing",
-      "path": "utility/utility_unit_testing.f90",
-      "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "discretization",
-        "interface_",
-        "storage_geometry",
-        "utility_allocate",
-        "utility_crash"
-      ]
-    },
-    {
-      "name": "weir_elements",
-      "path": "special_elements/weir_elements.f90",
-      "uses": [
-        "adjust",
-        "common_elements",
-        "define_globals",
-        "define_indexes",
-        "define_keys",
-        "define_settings",
-        "roadway_weir_elements",
-        "utility_crash"
+        {
+          "name": "define_settings",
+          "line": 11,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 15,
+          "source": "use geometry_lowlevel",
+          "only": null
+        }
       ]
     },
     {
       "name": "xsect_tables",
       "path": "geometry/xsect_tables.f90",
+      "line": 7,
       "uses": [
-        "define_globals",
-        "define_indexes",
-        "define_settings",
-        "define_xsect_tables",
-        "utility_crash"
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 18,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 19,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 20,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 21,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "bipquick",
+      "path": "initialization/BIPquick.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "discretization",
+          "line": 16,
+          "source": "use discretization, only: discretization_equal_elements",
+          "only": "discretization_equal_elements"
+        },
+        {
+          "name": "utility",
+          "line": 17,
+          "source": "use utility, only: util_count_node_types, util_quicksort_high2low !",
+          "only": "util_count_node_types, util_quicksort_high2low"
+        },
+        {
+          "name": "utility_crash",
+          "line": 18,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "discretization",
+      "path": "initialization/discretization.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 17,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "ic_lowlevel",
+      "path": "initialization/ic_lowlevel.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 17,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 18,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 19,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "storage_geometry",
+          "line": 20,
+          "source": "use storage_geometry",
+          "only": null
+        },
+        {
+          "name": "orifice_elements",
+          "line": 21,
+          "source": "use orifice_elements, only: orifice_geometry_update",
+          "only": "orifice_geometry_update"
+        },
+        {
+          "name": "weir_elements",
+          "line": 22,
+          "source": "use weir_elements, only: weir_geometry_update",
+          "only": "weir_geometry_update"
+        },
+        {
+          "name": "interface_",
+          "line": 23,
+          "source": "use interface_, only: interface_get_nodef_attribute",
+          "only": "interface_get_nodef_attribute"
+        },
+        {
+          "name": "utility",
+          "line": 24,
+          "source": "use utility, only: util_get_adjacent_CC_link, util_first_and_last_elem_of_link",
+          "only": "util_get_adjacent_CC_link, util_first_and_last_elem_of_link"
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 25,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 26,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "initial_condition",
+      "path": "initialization/initial_condition.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 17,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 18,
+          "source": "use pack_mask_arrays",
+          "only": null
+        },
+        {
+          "name": "boundary_conditions",
+          "line": 19,
+          "source": "use boundary_conditions",
+          "only": null
+        },
+        {
+          "name": "update",
+          "line": 20,
+          "source": "use update",
+          "only": null
+        },
+        {
+          "name": "face",
+          "line": 21,
+          "source": "use face",
+          "only": null
+        },
+        {
+          "name": "forcemain",
+          "line": 22,
+          "source": "use forcemain, only : forcemain_ManningsN",
+          "only": "forcemain_ManningsN"
+        },
+        {
+          "name": "diagnostic_elements",
+          "line": 23,
+          "source": "use diagnostic_elements",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 24,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "circular_conduit",
+          "line": 26,
+          "source": "use circular_conduit",
+          "only": null
+        },
+        {
+          "name": "filled_circular_conduit",
+          "line": 36,
+          "source": "use filled_circular_conduit",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 37,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "irregular_channel",
+          "line": 38,
+          "source": "use irregular_channel, only: irregular_geometry_from_depth_singular",
+          "only": "irregular_geometry_from_depth_singular"
+        },
+        {
+          "name": "storage_geometry",
+          "line": 39,
+          "source": "use storage_geometry",
+          "only": null
+        },
+        {
+          "name": "preissmann_slot",
+          "line": 40,
+          "source": "use preissmann_slot, only:  slot_jb_computation",
+          "only": "slot_jb_computation"
+        },
+        {
+          "name": "adjust",
+          "line": 41,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "ic_lowlevel",
+          "line": 42,
+          "source": "use ic_lowlevel",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 43,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "control_hydraulics",
+          "line": 44,
+          "source": "use control_hydraulics, only: control_init_monitoring_and_action_from_EPASWMM",
+          "only": "control_init_monitoring_and_action_from_EPASWMM"
+        },
+        {
+          "name": "interface_",
+          "line": 45,
+          "source": "use interface_, only: interface_get_nodef_attribute",
+          "only": "interface_get_nodef_attribute"
+        },
+        {
+          "name": "junction_lowlevel",
+          "line": 46,
+          "source": "use junction_lowlevel, only: lljunction_main_plan_area, &",
+          "only": "lljunction_main_plan_area, &"
+        },
+        {
+          "name": "utility",
+          "line": 48,
+          "source": "use utility, only: util_get_adjacent_CC_link, util_first_and_last_elem_of_link !",
+          "only": "util_get_adjacent_CC_link, util_first_and_last_elem_of_link"
+        },
+        {
+          "name": "utility_profiler",
+          "line": 49,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 50,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "utility_deallocate",
+          "line": 51,
+          "source": "use utility_deallocate",
+          "only": null
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 52,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "utility_key_default",
+          "line": 53,
+          "source": "use utility_key_default",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 54,
+          "source": "use utility_crash  !%, only: util_crashpoint",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "initialization",
+      "path": "initialization/initialization.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "ifport",
+          "line": 21,
+          "source": "use IFPORT",
+          "only": null
+        },
+        {
+          "name": "boundary_conditions",
+          "line": 22,
+          "source": "use boundary_conditions",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 23,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 24,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 25,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 26,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "discretization",
+          "line": 27,
+          "source": "use discretization",
+          "only": null
+        },
+        {
+          "name": "initial_condition",
+          "line": 28,
+          "source": "use initial_condition",
+          "only": null
+        },
+        {
+          "name": "interface_",
+          "line": 29,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "network_define",
+          "line": 30,
+          "source": "use network_define",
+          "only": null
+        },
+        {
+          "name": "partitioning",
+          "line": 31,
+          "source": "use partitioning",
+          "only": null
+        },
+        {
+          "name": "culvert_elements",
+          "line": 32,
+          "source": "use culvert_elements, only: culvert_parameter_values",
+          "only": "culvert_parameter_values"
+        },
+        {
+          "name": "utility",
+          "line": 33,
+          "source": "use utility !",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 34,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "utility_array",
+          "line": 35,
+          "source": "use utility_array",
+          "only": null
+        },
+        {
+          "name": "utility_datetime",
+          "line": 36,
+          "source": "use utility_datetime",
+          "only": null
+        },
+        {
+          "name": "utility_output",
+          "line": 37,
+          "source": "use utility_output",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 38,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_files",
+          "line": 39,
+          "source": "use utility_files",
+          "only": null
+        },
+        {
+          "name": "utility_key_default",
+          "line": 40,
+          "source": "use utility_key_default",
+          "only": null
+        },
+        {
+          "name": "output",
+          "line": 41,
+          "source": "use output",
+          "only": null
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 42,
+          "source": "use pack_mask_arrays",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 43,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 44,
+          "source": "use xsect_tables",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "network_define",
+      "path": "initialization/network_define.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "interface_",
+          "line": 14,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 15,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "discretization",
+          "line": 16,
+          "source": "use discretization",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 19,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 20,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 21,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 22,
+          "source": "use utility, only: util_quicksort_low2high",
+          "only": "util_quicksort_low2high"
+        },
+        {
+          "name": "utility_crash",
+          "line": 23,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "pack_mask_arrays",
+      "path": "initialization/pack_mask_arrays.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 17,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 18,
+          "source": "use utility, only : util_unique_rank !",
+          "only": "util_unique_rank"
+        }
+      ]
+    },
+    {
+      "name": "partitioning",
+      "path": "initialization/partitioning.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_keys",
+          "line": 25,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 26,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 27,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 28,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "discretization",
+          "line": 29,
+          "source": "use discretization, only: discretization_nominal",
+          "only": "discretization_nominal"
+        },
+        {
+          "name": "utility",
+          "line": 30,
+          "source": "use utility, only : util_count_node_types, util_quicksort_low2high, util_quicksort_high2low !",
+          "only": "util_count_node_types, util_quicksort_low2high, util_quicksort_high2low"
+        },
+        {
+          "name": "utility_allocate",
+          "line": 31,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "bipquick",
+          "line": 32,
+          "source": "use BIPquick",
+          "only": null
+        },
+        {
+          "name": "utility_array",
+          "line": 33,
+          "source": "use utility_array, only : util_image_number_calculation",
+          "only": "util_image_number_calculation"
+        },
+        {
+          "name": "utility_deallocate",
+          "line": 34,
+          "source": "use utility_deallocate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 35,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 36,
+          "source": "use utility_profiler",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "c_library",
+      "path": "interface/c_library.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "iso_c_binding",
+          "line": 12,
+          "source": "use iso_c_binding",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 13,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 14,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "interface_",
+      "path": "interface/interface.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "iso_c_binding",
+          "line": 13,
+          "source": "use iso_c_binding",
+          "only": null
+        },
+        {
+          "name": "c_library",
+          "line": 14,
+          "source": "use c_library",
+          "only": null
+        },
+        {
+          "name": "utility_datetime",
+          "line": 16,
+          "source": "use utility_datetime",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_api_keys",
+          "line": 19,
+          "source": "use define_api_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 20,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 21,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 22,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "finalization",
+      "path": "main/finalization.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "interface_",
+          "line": 15,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 16,
+          "source": "use utility, only : util_total_volume_conservation !",
+          "only": "util_total_volume_conservation"
+        },
+        {
+          "name": "utility_datetime",
+          "line": 17,
+          "source": "use utility_datetime",
+          "only": null
+        },
+        {
+          "name": "utility_deallocate",
+          "line": 18,
+          "source": "use utility_deallocate",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 19,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "output",
+          "line": 20,
+          "source": "use output",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 21,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "utility_files",
+          "line": 22,
+          "source": "use utility_files, only: util_file_delete_duplicate_input",
+          "only": "util_file_delete_duplicate_input"
+        }
+      ]
+    },
+    {
+      "name": "output",
+      "path": "main/output.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 19,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 20,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_types",
+          "line": 21,
+          "source": "use define_types",
+          "only": null
+        },
+        {
+          "name": "interface_",
+          "line": 22,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "utility_datetime",
+          "line": 23,
+          "source": "use utility_datetime",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 24,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "utility_deallocate",
+          "line": 25,
+          "source": "use utility_deallocate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 26,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        },
+        {
+          "name": "hdf5",
+          "line": 27,
+          "source": "use HDF5",
+          "only": null
+        },
+        {
+          "name": "iso_c_binding",
+          "line": 28,
+          "source": "USE ISO_C_BINDING",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "common_elements",
+      "path": "special_elements/common_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 11,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 12,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 14,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 15,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "control_hydraulics",
+      "path": "special_elements/control_hydraulics.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "interface_",
+          "line": 18,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "orifice_elements",
+          "line": 19,
+          "source": "use orifice_elements",
+          "only": null
+        },
+        {
+          "name": "weir_elements",
+          "line": 20,
+          "source": "use weir_elements",
+          "only": null
+        },
+        {
+          "name": "pump_elements",
+          "line": 21,
+          "source": "use pump_elements",
+          "only": null
+        },
+        {
+          "name": "outlet_elements",
+          "line": 22,
+          "source": "use outlet_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 23,
+          "source": "use adjust,           only: adjust_face_for_zero_setting_singular",
+          "only": "adjust_face_for_zero_setting_singular"
+        },
+        {
+          "name": "utility_allocate",
+          "line": 24,
+          "source": "use utility_allocate, only: util_allocate_monitor_points, util_allocate_action_points",
+          "only": "util_allocate_monitor_points, util_allocate_action_points"
+        },
+        {
+          "name": "utility",
+          "line": 25,
+          "source": "use utility,          only: util_unique_rank !",
+          "only": "util_unique_rank"
+        },
+        {
+          "name": "utility_crash",
+          "line": 26,
+          "source": "use utility_crash,    only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "culvert_elements",
+      "path": "special_elements/culvert_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 18,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 19,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 20,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 21,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 22,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "diagnostic_elements",
+      "path": "special_elements/diagnostic_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "face",
+          "line": 18,
+          "source": "use face",
+          "only": null
+        },
+        {
+          "name": "weir_elements",
+          "line": 19,
+          "source": "use weir_elements",
+          "only": null
+        },
+        {
+          "name": "pump_elements",
+          "line": 20,
+          "source": "use pump_elements",
+          "only": null
+        },
+        {
+          "name": "orifice_elements",
+          "line": 21,
+          "source": "use orifice_elements",
+          "only": null
+        },
+        {
+          "name": "outlet_elements",
+          "line": 22,
+          "source": "use outlet_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 23,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 24,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 25,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "jump",
+      "path": "special_elements/jump.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 17,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 18,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 19,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "orifice_elements",
+      "path": "special_elements/orifice_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "common_elements",
+          "line": 18,
+          "source": "use common_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 19,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 20,
+          "source": "use geometry_lowlevel",
+          "only": null
+        },
+        {
+          "name": "irregular_channel",
+          "line": 21,
+          "source": "use irregular_channel, only: irregular_geometry_from_depth_singular",
+          "only": "irregular_geometry_from_depth_singular"
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 22,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 24,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 26,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "outlet_elements",
+      "path": "special_elements/outlet_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 13,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 14,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "common_elements",
+          "line": 16,
+          "source": "use common_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 17,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 18,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 19,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "pump_elements",
+      "path": "special_elements/pump_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "common_elements",
+          "line": 18,
+          "source": "use common_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 19,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 20,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 22,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "roadway_weir_elements",
+      "path": "special_elements/roadway_weir_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 24,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 25,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 26,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 27,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 28,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "weir_elements",
+      "path": "special_elements/weir_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "common_elements",
+          "line": 18,
+          "source": "use common_elements",
+          "only": null
+        },
+        {
+          "name": "roadway_weir_elements",
+          "line": 19,
+          "source": "use roadway_weir_elements",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 20,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 22,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "adjust",
+      "path": "timeloop/adjust.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 11,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 12,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 14,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 15,
+          "source": "use pack_mask_arrays, only: pack_small_or_zero_depth_elements, pack_CC_zeroDepth_interior_faces",
+          "only": "pack_small_or_zero_depth_elements, pack_CC_zeroDepth_interior_faces"
+        },
+        {
+          "name": "preissmann_slot",
+          "line": 16,
+          "source": "use preissmann_slot, only: slot_Vshaped_adjust",
+          "only": "slot_Vshaped_adjust"
+        },
+        {
+          "name": "utility",
+          "line": 17,
+          "source": "use utility, only: util_sign_with_ones, util_sign_with_ones_or_zero !",
+          "only": "util_sign_with_ones, util_sign_with_ones_or_zero"
+        },
+        {
+          "name": "utility_crash",
+          "line": 18,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "air_entrapment",
+      "path": "timeloop/air_entrapment.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "face",
+          "line": 16,
+          "source": "use face, only: face_interpolation",
+          "only": "face_interpolation"
+        },
+        {
+          "name": "utility_crash",
+          "line": 17,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "boundary_conditions",
+      "path": "timeloop/boundary_conditions.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "interface_",
+          "line": 12,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 16,
+          "source": "use utility, only: util_print_warning   !",
+          "only": "util_print_warning"
+        },
+        {
+          "name": "utility_interpolate",
+          "line": 17,
+          "source": "use utility_interpolate",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 18,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "face",
+          "line": 19,
+          "source": "use face, only: face_interpolate_bc",
+          "only": "face_interpolate_bc"
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 20,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 21,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "xsect_tables",
+          "line": 22,
+          "source": "use xsect_tables",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 23,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "utility_datetime",
+          "line": 24,
+          "source": "use utility_datetime, only: util_datetime_seconds_precision",
+          "only": "util_datetime_seconds_precision"
+        }
+      ]
+    },
+    {
+      "name": "face",
+      "path": "timeloop/face.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 16,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 19,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "adjust",
+          "line": 20,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 21,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "jump",
+          "line": 22,
+          "source": "use jump",
+          "only": null
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 23,
+          "source": "use pack_mask_arrays, only: pack_CC_zeroDepth_interior_faces, pack_CC_zeroDepth_shared_faces",
+          "only": "pack_CC_zeroDepth_interior_faces, pack_CC_zeroDepth_shared_faces"
+        },
+        {
+          "name": "update",
+          "line": 24,
+          "source": "use update, only: update_area_for_velocity",
+          "only": "update_area_for_velocity"
+        },
+        {
+          "name": "utility_profiler",
+          "line": 25,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 27,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "junction_elements",
+      "path": "timeloop/junction_elements.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 16,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 17,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 18,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "adjust",
+          "line": 19,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "diagnostic_elements",
+          "line": 20,
+          "source": "use diagnostic_elements",
+          "only": null
+        },
+        {
+          "name": "face",
+          "line": 21,
+          "source": "use face",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 22,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "junction_lowlevel",
+          "line": 24,
+          "source": "use junction_lowlevel",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 25,
+          "source": "use geometry_lowlevel, only: llgeo_head_from_depth_pure",
+          "only": "llgeo_head_from_depth_pure"
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 26,
+          "source": "use pack_mask_arrays",
+          "only": null
+        },
+        {
+          "name": "preissmann_slot",
+          "line": 27,
+          "source": "use preissmann_slot",
+          "only": null
+        },
+        {
+          "name": "update",
+          "line": 28,
+          "source": "use update",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 29,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        },
+        {
+          "name": "utility_unit_testing",
+          "line": 31,
+          "source": "use utility_unit_testing, only: util_utest_CLprint",
+          "only": "util_utest_CLprint"
+        }
+      ]
+    },
+    {
+      "name": "junction_lowlevel",
+      "path": "timeloop/junction_lowlevel.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 11,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 12,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_xsect_tables",
+          "line": 14,
+          "source": "use define_xsect_tables",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "face",
+          "line": 16,
+          "source": "use face, only: face_push_elemdata_to_face",
+          "only": "face_push_elemdata_to_face"
+        },
+        {
+          "name": "geometry",
+          "line": 17,
+          "source": "use geometry, only: geo_depth_from_volume_by_element_CC",
+          "only": "geo_depth_from_volume_by_element_CC"
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 18,
+          "source": "use geometry_lowlevel, only: llgeo_head_from_depth_pure",
+          "only": "llgeo_head_from_depth_pure"
+        },
+        {
+          "name": "storage_geometry",
+          "line": 19,
+          "source": "use storage_geometry, only: storage_volume_from_depth_singular",
+          "only": "storage_volume_from_depth_singular"
+        },
+        {
+          "name": "update",
+          "line": 20,
+          "source": "use update, only: update_Froude_number_element, update_wavespeed_element, update_auxiliary_variables_CC",
+          "only": "update_Froude_number_element, update_wavespeed_element, update_auxiliary_variables_CC"
+        },
+        {
+          "name": "utility_crash",
+          "line": 21,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "preissmann_slot",
+      "path": "timeloop/preissmann_slot.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 12,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 16,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "rk2_lowlevel",
+      "path": "timeloop/rk2_lowlevel.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 13,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 15,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 17,
+          "source": "use geometry, only : geo_area_from_depth_singular",
+          "only": "geo_area_from_depth_singular"
+        },
+        {
+          "name": "utility_output",
+          "line": 19,
+          "source": "use utility_output",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 20,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "runge_kutta2",
+      "path": "timeloop/runge_kutta2.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 16,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 19,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "update",
+          "line": 20,
+          "source": "use update",
+          "only": null
+        },
+        {
+          "name": "face",
+          "line": 21,
+          "source": "use face",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 22,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "geometry_lowlevel",
+          "line": 23,
+          "source": "use geometry_lowlevel, only: llgeo_head_from_depth_pure",
+          "only": "llgeo_head_from_depth_pure"
+        },
+        {
+          "name": "forcemain",
+          "line": 24,
+          "source": "use forcemain, only: forcemain_ManningsN",
+          "only": "forcemain_ManningsN"
+        },
+        {
+          "name": "junction_elements",
+          "line": 25,
+          "source": "use junction_elements",
+          "only": null
+        },
+        {
+          "name": "rk2_lowlevel",
+          "line": 26,
+          "source": "use rk2_lowlevel",
+          "only": null
+        },
+        {
+          "name": "culvert_elements",
+          "line": 27,
+          "source": "use culvert_elements, only: culvert_toplevel  !% NOT WORKING AS OF 20230912",
+          "only": "culvert_toplevel"
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 28,
+          "source": "use pack_mask_arrays",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 30,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "diagnostic_elements",
+          "line": 31,
+          "source": "use diagnostic_elements",
+          "only": null
+        },
+        {
+          "name": "air_entrapment",
+          "line": 32,
+          "source": "use air_entrapment",
+          "only": null
+        },
+        {
+          "name": "storage_geometry",
+          "line": 33,
+          "source": "use storage_geometry, only: storage_volume_from_depth_singular",
+          "only": "storage_volume_from_depth_singular"
+        },
+        {
+          "name": "utility_crash",
+          "line": 34,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "utility_unit_testing",
+          "line": 35,
+          "source": "use utility_unit_testing, only: util_utest_CLprint, util_utest_checkIsNan",
+          "only": "util_utest_CLprint, util_utest_checkIsNan"
+        }
+      ]
+    },
+    {
+      "name": "timeloop",
+      "path": "timeloop/timeloop.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 18,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 19,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 20,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "output",
+          "line": 21,
+          "source": "use output, only: outputML_store_data",
+          "only": "outputML_store_data"
+        },
+        {
+          "name": "pack_mask_arrays",
+          "line": 22,
+          "source": "use pack_mask_arrays",
+          "only": null
+        },
+        {
+          "name": "runge_kutta2",
+          "line": 23,
+          "source": "use runge_kutta2",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 25,
+          "source": "use utility, only: util_global_volume_balance, util_local_volume_balance !",
+          "only": "util_global_volume_balance, util_local_volume_balance"
+        },
+        {
+          "name": "utility_output",
+          "line": 26,
+          "source": "use utility_output",
+          "only": null
+        },
+        {
+          "name": "boundary_conditions",
+          "line": 27,
+          "source": "use boundary_conditions",
+          "only": null
+        },
+        {
+          "name": "utility_profiler",
+          "line": 28,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_datetime",
+          "line": 29,
+          "source": "use utility_datetime",
+          "only": null
+        },
+        {
+          "name": "interface_",
+          "line": 30,
+          "source": "use interface_, &",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 40,
+          "source": "use utility_crash",
+          "only": null
+        },
+        {
+          "name": "control_hydraulics",
+          "line": 41,
+          "source": "use control_hydraulics, only: control_update",
+          "only": "control_update"
+        }
+      ]
+    },
+    {
+      "name": "update",
+      "path": "timeloop/update.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_globals",
+          "line": 16,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 18,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "geometry",
+          "line": 19,
+          "source": "use geometry",
+          "only": null
+        },
+        {
+          "name": "adjust",
+          "line": 20,
+          "source": "use adjust",
+          "only": null
+        },
+        {
+          "name": "storage_geometry",
+          "line": 21,
+          "source": "use storage_geometry, only: storage_plan_area_from_volume",
+          "only": "storage_plan_area_from_volume"
+        },
+        {
+          "name": "utility_profiler",
+          "line": 22,
+          "source": "use utility_profiler",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 23,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "utility",
+      "path": "utility/utility.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 12,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 13,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 15,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 16,
+          "source": "use utility_crash",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "utility_allocate",
+      "path": "utility/utility_allocate.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 24,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 25,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 26,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 27,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "interface_",
+          "line": 28,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "utility",
+          "line": 29,
+          "source": "use utility, only : util_count_node_types !",
+          "only": "util_count_node_types"
+        },
+        {
+          "name": "utility_crash",
+          "line": 30,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_array",
+      "path": "utility/utility_array.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "utility_allocate",
+          "line": 13,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 15,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 18,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_crash",
+      "path": "utility/utility_crash.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 31,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 32,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 33,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 34,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        }
+      ]
+    },
+    {
+      "name": "utility_datetime",
+      "path": "utility/utility_datetime.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 17,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "define_api_keys",
+          "line": 18,
+          "source": "use define_api_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 19,
+          "source": "use define_globals, only: datedelta, secsperday, dayspermonth, nullvalueR, &",
+          "only": "datedelta, secsperday, dayspermonth, nullvalueR, &"
+        },
+        {
+          "name": "utility_crash",
+          "line": 21,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_deallocate",
+      "path": "utility/utility_deallocate.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 15,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        },
+        {
+          "name": "utility_crash",
+          "line": 17,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_debug",
+      "path": "utility/utility_debug.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 3,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 4,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 5,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 6,
+          "source": "use define_settings",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "utility_files",
+      "path": "utility/utility_files.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_settings",
+          "line": 12,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "ifport",
+          "line": 13,
+          "source": "use ifport",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 14,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_interpolate",
+      "path": "utility/utility_interpolate.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 12,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 14,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 16,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 17,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "utility_crash",
+          "line": 18,
+          "source": "use utility_crash, only: util_crashpoint",
+          "only": "util_crashpoint"
+        }
+      ]
+    },
+    {
+      "name": "utility_key_default",
+      "path": "utility/utility_key_default.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_globals",
+          "line": 15,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 16,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 17,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 18,
+          "source": "use define_settings, only: setting",
+          "only": "setting"
+        }
+      ]
+    },
+    {
+      "name": "utility_output",
+      "path": "utility/utility_output.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 11,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 12,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 13,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 14,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "define_types",
+          "line": 15,
+          "source": "use define_types",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "utility_profiler",
+      "path": "utility/utility_profiler.f90",
+      "line": 2,
+      "uses": [
+        {
+          "name": "define_indexes",
+          "line": 13,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 14,
+          "source": "use define_globals",
+          "only": null
+        }
+      ]
+    },
+    {
+      "name": "utility_string",
+      "path": "utility/utility_string.f90",
+      "line": 1,
+      "uses": []
+    },
+    {
+      "name": "utility_unit_testing",
+      "path": "utility/utility_unit_testing.f90",
+      "line": 1,
+      "uses": [
+        {
+          "name": "interface_",
+          "line": 18,
+          "source": "use interface_",
+          "only": null
+        },
+        {
+          "name": "utility_allocate",
+          "line": 19,
+          "source": "use utility_allocate",
+          "only": null
+        },
+        {
+          "name": "discretization",
+          "line": 20,
+          "source": "use discretization",
+          "only": null
+        },
+        {
+          "name": "define_indexes",
+          "line": 21,
+          "source": "use define_indexes",
+          "only": null
+        },
+        {
+          "name": "define_keys",
+          "line": 22,
+          "source": "use define_keys",
+          "only": null
+        },
+        {
+          "name": "define_globals",
+          "line": 23,
+          "source": "use define_globals",
+          "only": null
+        },
+        {
+          "name": "define_settings",
+          "line": 24,
+          "source": "use define_settings",
+          "only": null
+        },
+        {
+          "name": "storage_geometry",
+          "line": 25,
+          "source": "use storage_geometry, only : storage_implied_depth_from_volume",
+          "only": "storage_implied_depth_from_volume"
+        },
+        {
+          "name": "utility_crash",
+          "line": 27,
+          "source": "use utility_crash, only : util_crashpoint",
+          "only": "util_crashpoint"
+        }
       ]
     }
   ]
