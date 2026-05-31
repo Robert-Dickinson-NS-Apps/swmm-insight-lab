@@ -389,7 +389,26 @@ function ExtractionTrace({ mod }: { mod: (typeof AUTO_MODULES)[number] }) {
         <div className="text-xs uppercase tracking-wider text-muted-foreground">
           Extraction trace · {mod.useDetails.length} edge{mod.useDetails.length === 1 ? "" : "s"}
         </div>
-        <div className="text-[10px] text-muted-foreground">line · source</div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-6 gap-1 px-1.5 text-[10px] text-muted-foreground hover:text-foreground"
+            onClick={() =>
+              downloadJson(`${mod.name}-trace.json`, {
+                module: mod.name,
+                path: mod.path,
+                declaredLine: mod.declaredLine,
+                subsystem: mod.subsystem,
+                useDetails: mod.useDetails,
+              })
+            }
+          >
+            <Download className="h-3 w-3" />
+            JSON
+          </Button>
+          <div className="text-[10px] text-muted-foreground">line · source</div>
+        </div>
       </div>
       <ol className="mt-2 divide-y divide-border rounded border border-border bg-secondary/30 font-mono text-[11px]">
         {mod.useDetails.map((e) => {
