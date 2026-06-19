@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreeRouteImport } from './routes/tree'
 import { Route as PapersRouteImport } from './routes/papers'
+import { Route as CTranslationRouteImport } from './routes/c-translation'
 import { Route as CAlternativeRouteImport } from './routes/c-alternative'
 import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +24,11 @@ const TreeRoute = TreeRouteImport.update({
 const PapersRoute = PapersRouteImport.update({
   id: '/papers',
   path: '/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CTranslationRoute = CTranslationRouteImport.update({
+  id: '/c-translation',
+  path: '/c-translation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CAlternativeRoute = CAlternativeRouteImport.update({
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/c-alternative': typeof CAlternativeRoute
+  '/c-translation': typeof CTranslationRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/c-alternative': typeof CAlternativeRoute
+  '/c-translation': typeof CTranslationRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
 }
@@ -60,19 +68,33 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/architecture': typeof ArchitectureRoute
   '/c-alternative': typeof CAlternativeRoute
+  '/c-translation': typeof CTranslationRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/architecture' | '/c-alternative' | '/papers' | '/tree'
+  fullPaths:
+    | '/'
+    | '/architecture'
+    | '/c-alternative'
+    | '/c-translation'
+    | '/papers'
+    | '/tree'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/architecture' | '/c-alternative' | '/papers' | '/tree'
+  to:
+    | '/'
+    | '/architecture'
+    | '/c-alternative'
+    | '/c-translation'
+    | '/papers'
+    | '/tree'
   id:
     | '__root__'
     | '/'
     | '/architecture'
     | '/c-alternative'
+    | '/c-translation'
     | '/papers'
     | '/tree'
   fileRoutesById: FileRoutesById
@@ -81,6 +103,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchitectureRoute: typeof ArchitectureRoute
   CAlternativeRoute: typeof CAlternativeRoute
+  CTranslationRoute: typeof CTranslationRoute
   PapersRoute: typeof PapersRoute
   TreeRoute: typeof TreeRoute
 }
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/papers'
       fullPath: '/papers'
       preLoaderRoute: typeof PapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c-translation': {
+      id: '/c-translation'
+      path: '/c-translation'
+      fullPath: '/c-translation'
+      preLoaderRoute: typeof CTranslationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/c-alternative': {
@@ -129,19 +159,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchitectureRoute: ArchitectureRoute,
   CAlternativeRoute: CAlternativeRoute,
+  CTranslationRoute: CTranslationRoute,
   PapersRoute: PapersRoute,
   TreeRoute: TreeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
