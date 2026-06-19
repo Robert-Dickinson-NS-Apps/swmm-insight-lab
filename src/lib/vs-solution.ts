@@ -284,6 +284,7 @@ CMakeLists.txt              CMake alternative
 src/main.c                  Entry point — calls every module's init/step/finalize
 src/<module>.h              One header per Fortran module
 src/<module>.c              One source per Fortran module (TODO bodies)
+README.txt                  Plain-text version of these instructions
 \`\`\`
 
 ## Porting workflow
@@ -299,6 +300,112 @@ src/<module>.c              One source per Fortran module (TODO bodies)
 
 The \`#include\` directives in each header mirror the original Fortran
 \`use\` graph, so dependency order is already correct.
+`;
+}
+
+function readmeTxt(modules: AutoModule[]): string {
+  return `SWMM5+ — Auto-generated C translation
+================================================================================
+Generated on ${new Date().toISOString()} from ${GITHUB_REPO} @ ${GITHUB_BRANCH}
+(extracted ${EXTRACTED_AT}).
+Includes ${modules.length} module(s) translated as compilable C stubs.
+
+QUICK START — VISUAL STUDIO 2022
+================================================================================
+1. Unzip swmm5plus_c.zip to a folder on your local machine.
+2. Double-click swmm5plus.sln to open the solution in Visual Studio 2022.
+3. In the toolbar, make sure the platform is set to x64 (not Any CPU or Win32).
+4. Choose a configuration:
+      Debug   = full symbols, no optimization, fastest build
+      Release = optimized build
+5. Build > Build Solution (or press Ctrl+Shift+B).
+   The first build should complete with no errors and only the expected
+   "TODO" warning-level unused-parameter warnings. If you see linker errors,
+   make sure the include path below is correct.
+6. Run the program by pressing F5 or by choosing Debug > Start Debugging.
+   You should see the console output:
+
+      SWMM5+ (C translation) starting...
+      SWMM5+ (C translation) done.
+
+REQUIRED COMPILER SETTINGS
+================================================================================
+Toolset          : Visual Studio 2022 (v143)
+Platform         : x64
+C language       : C17 (ISO/IEC 9899:2018)
+Character set    : Unicode
+Configuration    : Debug or Release
+Warning level    : Level3 (/W3)
+SDL checks       : enabled (/sdl)
+Conformance mode : Yes (/permissive-)
+Include path     : $(ProjectDir)src
+
+These settings are already written in swmm5plus.vcxproj. You do not need to
+change them unless you are adding third-party libraries or moving the src/
+folder.
+
+HOW TO RUN THE GENERATED MAIN PROGRAM
+================================================================================
+From Visual Studio
+------------------
+   Make sure the project "swmm5plus" is the StartUp project (it is by default),
+   then press F5. The console window will open and show the program output.
+
+From the command line (Windows)
+-------------------------------
+After building, the executable is located at:
+
+   x64\\Debug\\swmm5plus.exe        (for Debug)
+   x64\\Release\\swmm5plus.exe      (for Release)
+
+Open a Developer Command Prompt for VS 2022, cd to the solution folder, and
+run:
+
+   x64\\Release\\swmm5plus.exe
+
+or
+
+   x64\\Debug\\swmm5plus.exe
+
+From CMake (cross-platform)
+---------------------------
+If you prefer CMake, run:
+
+   cmake -S . -B build
+   cmake --build build --config Release
+
+The executable will be in:
+
+   build\\swmm5plus      (Linux/macOS)
+   build\\Release\\swmm5plus.exe   (Windows)
+
+WHAT EACH FILE DOES
+================================================================================
+swmm5plus.sln               Visual Studio solution
+swmm5plus.vcxproj           MSBuild project with compiler settings above
+swmm5plus.vcxproj.filters   Solution Explorer source/header filters
+CMakeLists.txt              CMake alternative build file
+src/main.c                  Entry point: calls every module's init/step/finalize
+src/<module>.h              One header per Fortran module (mirror of use graph)
+src/<module>.c              One source per Fortran module (TODO bodies)
+README.txt                  This file
+README.md                   Markdown version of this file
+
+PORTING NOTES
+================================================================================
+The generated .c files are intentionally empty stubs that compile and link
+cleanly so you have a starting point. To translate a module:
+
+1. Open src/<module>.c.
+2. Compare with the original Fortran source — the comment at the top of each
+   generated file links to the exact .f90 path and line.
+3. Replace the TODO bodies of <module>__init, <module>__step, and
+   <module>__finalize with the real C translation.
+4. Add more functions as needed and declare them in the matching .h file so
+   other modules can call them via #include.
+
+The #include directives in each .h file mirror the original Fortran use graph,
+so the dependency order is already correct.
 `;
 }
 
