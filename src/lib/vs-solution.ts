@@ -10,7 +10,7 @@ import { generateCSkeleton } from "@/lib/c-skeleton";
  *   - swmm5plus.vcxproj / .vcxproj.filters
  *   - swmm5plus.sln
  *   - CMakeLists.txt as a cross-platform alternative
- *   - README.md with build instructions
+ *   - README.md and README.txt with exact build/run instructions
  *
  * The output compiles cleanly with MSVC (Visual Studio 2022, v143 toolset)
  * out of the box because every generated .c only references symbols from
@@ -428,6 +428,7 @@ export async function buildVisualStudioSolutionZip(
   zip.file("swmm5plus.vcxproj.filters", vcxprojFilters(modules));
   zip.file("CMakeLists.txt", cmakeLists(modules));
   zip.file("README.md", readme(modules));
+  zip.file("README.txt", readmeTxt(modules));
 
   // src/ — main.c + per-module pair
   const src = zip.folder("src")!;
