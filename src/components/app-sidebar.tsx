@@ -5,6 +5,7 @@ import {
   Network,
   BookOpen,
   GitCompare,
+  FileCode2,
   Github,
 } from "lucide-react";
 
@@ -27,6 +28,7 @@ const items = [
   { title: "Architecture", url: "/architecture", icon: Network },
   { title: "Hodges papers", url: "/papers", icon: BookOpen },
   { title: "vs EPA SWMM5 (C)", url: "/c-alternative", icon: GitCompare },
+  { title: "C translation", url: "/c-translation", icon: FileCode2 },
 ] as const;
 
 export function AppSidebar() {
