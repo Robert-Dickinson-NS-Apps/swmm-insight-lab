@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Copy, Download, FileCode2, Search } from "lucide-react";
+import { Copy, Download, FileCode2, Package, Search } from "lucide-react";
 
 import { AUTO_MODULES, githubFileUrl } from "@/data/auto-modules";
 import { SUBSYSTEM_BY_ID } from "@/data/subsystems";
 import { generateCSkeleton } from "@/lib/c-skeleton";
+import { buildVisualStudioSolutionZip } from "@/lib/vs-solution";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/c-translation")({
@@ -16,21 +18,20 @@ export const Route = createFileRoute("/c-translation")({
       {
         name: "description",
         content:
-          "Auto-generated C header/source skeletons for every SWMM5+ Fortran module, ready to drop into MSVC / Visual Studio or a CMake build.",
+          "Auto-generated C header/source skeletons and a Visual Studio solution for every SWMM5+ Fortran module — ready to drop into MSVC, Visual Studio, or a CMake build.",
       },
       { property: "og:title", content: "SWMM5+ Fortran → C Skeletons" },
       {
         property: "og:description",
         content:
-          "Browse and copy per-module C stubs derived from the SWMM5+ Fortran sources.",
+          "Browse, copy, and export per-module C stubs and a full Visual Studio solution derived from the SWMM5+ Fortran sources.",
       },
     ],
   }),
   component: CTranslationPage,
 });
 
-function download(filename: string, content: string, mime = "text/plain") {
-  const blob = new Blob([content], { type: `${mime};charset=utf-8` });
+function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -41,10 +42,19 @@ function download(filename: string, content: string, mime = "text/plain") {
   URL.revokeObjectURL(url);
 }
 
+function downloadText(filename: string, content: string, mime = "text/plain") {
+  downloadBlob(filename, new Blob([content], { type: `${mime};charset=utf-8` }));
+}
+
 function CTranslationPage() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string>(AUTO_MODULES[0]?.id ?? "");
   const [tab, setTab] = useState<"header" | "source">("header");
+  const [included, setIncluded] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(AUTO_MODULES.map((m) => [m.id, true])),
+  );
+  const [building, setBuilding] = useState(false);
+  const [buildError, setBuildError] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -61,22 +71,53 @@ function CTranslationPage() {
     () => (selected ? generateCSkeleton(selected) : null),
     [selected],
   );
-
   const file = skeleton ? skeleton[tab] : null;
 
-  function downloadAllZipless() {
-    // Plain concatenated dump as a fallback (no zip dep in this project)
-    const parts = AUTO_MODULES.flatMap((m) => {
+  const includedModules = useMemo(
+    () => AUTO_MODULES.filter((m) => included[m.id]),
+    [included],
+  );
+  const includedCount = includedModules.length;
+
+  function setAllVisible(value: boolean) {
+    setIncluded((prev) => {
+      const next = { ...prev };
+      for (const m of filtered) next[m.id] = value;
+      return next;
+    });
+  }
+
+  async function downloadVisualStudioSolution() {
+    setBuildError(null);
+    if (includedCount === 0) {
+      setBuildError("Select at least one module to include in the solution.");
+      return;
+    }
+    setBuilding(true);
+    try {
+      const { blob, filename } = await buildVisualStudioSolutionZip({
+        modules: includedModules,
+      });
+      downloadBlob(filename, blob);
+    } catch (e) {
+      setBuildError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBuilding(false);
+    }
+  }
+
+  function downloadAllText() {
+    const parts = includedModules.flatMap((m) => {
       const s = generateCSkeleton(m);
       return [
         `/* ===== ${s.header.name} ===== */\n${s.header.content}`,
         `/* ===== ${s.source.name} ===== */\n${s.source.content}`,
       ];
     });
-    download(
+    downloadText(
       "swmm5plus_c_skeletons.txt",
       `/* SWMM5+ Fortran → C skeletons (auto-generated)\n` +
-        ` * ${AUTO_MODULES.length} modules\n` +
+        ` * ${includedCount} modules\n` +
         ` * Split this file at the "/* ===== filename ===== */" markers. */\n\n` +
         parts.join("\n\n"),
     );
@@ -95,23 +136,44 @@ function CTranslationPage() {
         expose three stub entry points (<code>init</code>, <code>step</code>,{" "}
         <code>finalize</code>) you can flesh out as you translate the
         subroutines. The output compiles as-is with MSVC, clang, or gcc — bodies
-        are TODO comments.
+        are <code>TODO</code> comments. Tick the modules you want in the bundle
+        and download a ready-to-open Visual Studio solution.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
-        <Button onClick={downloadAllZipless} variant="outline" size="sm">
+        <Button
+          onClick={downloadVisualStudioSolution}
+          size="sm"
+          disabled={building || includedCount === 0}
+        >
+          <Package className="h-4 w-4" />
+          {building
+            ? "Building…"
+            : `Download Visual Studio solution (.zip) — ${includedCount} module${includedCount === 1 ? "" : "s"}`}
+        </Button>
+        <Button onClick={downloadAllText} variant="outline" size="sm" disabled={includedCount === 0}>
           <Download className="h-4 w-4" />
-          Download all skeletons (.txt)
+          Download skeletons (.txt)
         </Button>
         <span className="text-xs text-muted-foreground">
-          {AUTO_MODULES.length} modules · header + source per module
+          {AUTO_MODULES.length} modules total · {includedCount} selected
         </span>
       </div>
+      {buildError && (
+        <p className="mt-2 text-xs text-destructive">{buildError}</p>
+      )}
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        The .zip contains <code>swmm5plus.sln</code>,{" "}
+        <code>swmm5plus.vcxproj</code>, a CMake build file, a generated{" "}
+        <code>main.c</code> entry point, and one <code>.h</code>/<code>.c</code>{" "}
+        pair per selected module. Open the .sln in Visual Studio 2022 (v143
+        toolset, x64) and hit Build.
+      </p>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[320px_1fr]">
+      <div className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]">
         {/* module list */}
         <Card className="overflow-hidden p-0">
-          <div className="border-b border-border p-3">
+          <div className="border-b border-border p-3 space-y-2">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -121,20 +183,51 @@ function CTranslationPage() {
                 className="h-8 pl-8 text-xs"
               />
             </div>
+            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+              <span>{filtered.length} shown</span>
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => setAllVisible(true)}
+                  className="rounded border border-border px-2 py-0.5 hover:bg-secondary"
+                >
+                  Include all
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAllVisible(false)}
+                  className="rounded border border-border px-2 py-0.5 hover:bg-secondary"
+                >
+                  Exclude all
+                </button>
+              </div>
+            </div>
           </div>
           <ul className="max-h-[70vh] overflow-y-auto text-sm">
             {filtered.map((m) => {
               const sub = SUBSYSTEM_BY_ID[m.subsystem];
               const active = m.id === selectedId;
+              const isIncluded = !!included[m.id];
               return (
-                <li key={m.id}>
+                <li
+                  key={m.id}
+                  className={
+                    "flex items-start gap-2 border-b border-border px-3 py-2 " +
+                    (active ? "bg-secondary" : "hover:bg-secondary/50")
+                  }
+                >
+                  <Checkbox
+                    checked={isIncluded}
+                    onCheckedChange={(v) =>
+                      setIncluded((prev) => ({ ...prev, [m.id]: !!v }))
+                    }
+                    className="mt-1"
+                    aria-label={`Include ${m.id} in solution`}
+                  />
                   <button
                     type="button"
                     onClick={() => setSelectedId(m.id)}
-                    className={
-                      "flex w-full items-start gap-2 border-b border-border px-3 py-2 text-left hover:bg-secondary/50 " +
-                      (active ? "bg-secondary" : "")
-                    }
+                    className="flex min-w-0 flex-1 items-start gap-2 text-left"
                   >
                     <span
                       className="mt-1.5 h-2 w-2 shrink-0 rounded-sm"
@@ -208,7 +301,7 @@ function CTranslationPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => download(file.name, file.content, "text/x-c")}
+                    onClick={() => downloadText(file.name, file.content, "text/x-c")}
                   >
                     <Download className="h-3.5 w-3.5" />
                     {file.name}
@@ -230,7 +323,8 @@ function CTranslationPage() {
       <p className="mt-6 text-xs text-muted-foreground">
         Skeletons are derived mechanically from the extracted <code>use</code>{" "}
         graph — function signatures and bodies are placeholders. Translation of
-        numerics is intentionally left to you.
+        numerics is intentionally left to you. The exported solution always
+        compiles cleanly so you can build incrementally as you port each module.
       </p>
     </div>
   );
