@@ -478,10 +478,31 @@ folder.
 
 HOW TO RUN THE GENERATED MAIN PROGRAM
 ================================================================================
+The program takes input and output file paths on the command line:
+
+   swmm5plus <input_file> <output_file> [report_file]
+
+Easiest way — bundled wrapper scripts
+-------------------------------------
+From the solution folder (the one with swmm5plus.sln), run:
+
+   Windows:        run.bat samples\\test.inp out\\test.out out\\test.rpt
+   macOS / Linux:  ./run.sh samples/test.inp out/test.out out/test.rpt
+
+The scripts auto-detect the built executable in x64\\Release, x64\\Debug, or
+build/ and forward all arguments. On macOS / Linux you may need to mark
+run.sh executable once after unzipping:
+
+   chmod +x run.sh
+
 From Visual Studio
 ------------------
-   Make sure the project "swmm5plus" is the StartUp project (it is by default),
-   then press F5. The console window will open and show the program output.
+Right-click the swmm5plus project > Properties > Debugging > Command Arguments
+and enter, for example:
+
+   samples\\test.inp out\\test.out out\\test.rpt
+
+Then press F5.
 
 From the command line (Windows)
 -------------------------------
@@ -493,11 +514,7 @@ After building, the executable is located at:
 Open a Developer Command Prompt for VS 2022, cd to the solution folder, and
 run:
 
-   x64\\Release\\swmm5plus.exe
-
-or
-
-   x64\\Debug\\swmm5plus.exe
+   x64\\Release\\swmm5plus.exe samples\\test.inp out\\test.out out\\test.rpt
 
 From CMake (cross-platform)
 ---------------------------
@@ -505,10 +522,11 @@ If you prefer CMake, run:
 
    cmake -S . -B build
    cmake --build build --config Release
+   ./build/swmm5plus samples/test.inp out/test.out out/test.rpt
 
 The executable will be in:
 
-   build\\swmm5plus      (Linux/macOS)
+   build/swmm5plus               (Linux/macOS)
    build\\Release\\swmm5plus.exe   (Windows)
 
 WHAT EACH FILE DOES
@@ -517,11 +535,14 @@ swmm5plus.sln               Visual Studio solution
 swmm5plus.vcxproj           MSBuild project with compiler settings above
 swmm5plus.vcxproj.filters   Solution Explorer source/header filters
 CMakeLists.txt              CMake alternative build file
-src/main.c                  Entry point: calls every module's init/step/finalize
+run.bat                     Windows wrapper for running the built executable
+run.sh                      macOS/Linux wrapper for running the built executable
+src/main.c                  Entry point: parses <input> <output> [report] args
 src/<module>.h              One header per Fortran module (mirror of use graph)
 src/<module>.c              One source per Fortran module (TODO bodies)
 README.txt                  This file
 README.md                   Markdown version of this file
+
 
 PORTING NOTES
 ================================================================================
