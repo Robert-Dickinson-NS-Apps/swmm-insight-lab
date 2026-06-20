@@ -40,19 +40,43 @@ function mainC(modules: AutoModule[]): string {
  * Generated from ${GITHUB_REPO}@${GITHUB_BRANCH} on ${EXTRACTED_AT}.
  * Modules included: ${modules.length}
  *
- * This file calls every translated module's init / step / finalize stub
- * in declaration order. Replace the toy time loop below with the real
- * SWMM5+ driver as you port the timeloop module.
+ * Usage:
+ *   swmm5plus <input_file> <output_file> [report_file]
+ *
+ * The run.bat / run.sh scripts in the zip root wrap this so you can just
+ * pass paths without remembering the exe location.
  */
 #include <stdio.h>
+#include <string.h>
 
 ${includes}
 
-int main(int argc, char** argv) {
-    (void)argc; (void)argv;
-    printf("SWMM5+ (C translation) starting...\\n");
+static void usage(const char* prog) {
+    fprintf(stderr,
+        "Usage: %s <input_file> <output_file> [report_file]\\n"
+        "  input_file  - SWMM5+ input (.inp) path\\n"
+        "  output_file - binary results output path\\n"
+        "  report_file - optional text report path (default: <output>.rpt)\\n",
+        prog);
+}
 
-    /* --- initialization phase --- */
+int main(int argc, char** argv) {
+    if (argc < 3 || argc > 4 ||
+        strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+        usage(argv[0]);
+        return argc < 3 ? 1 : 0;
+    }
+    const char* input_path  = argv[1];
+    const char* output_path = argv[2];
+    const char* report_path = argc == 4 ? argv[3] : NULL;
+
+    printf("SWMM5+ (C translation) starting...\\n");
+    printf("  input  : %s\\n", input_path);
+    printf("  output : %s\\n", output_path);
+    if (report_path) printf("  report : %s\\n", report_path);
+
+    /* --- initialization phase ---
+     * TODO: pass input_path into the modules that need it as you port them. */
 ${inits}
 
     /* --- toy time loop (replace with real driver) --- */
@@ -61,12 +85,105 @@ ${inits}
 ${steps}
     }
 
-    /* --- finalization (reverse order) --- */
+    /* --- finalization (reverse order) ---
+     * TODO: write results to output_path / report_path as you port the
+     * output module. */
 ${fins}
 
     printf("SWMM5+ (C translation) done.\\n");
     return 0;
 }
+`;
+}
+
+function runBat(): string {
+  return `@echo off
+REM ============================================================================
+REM run.bat - Convenience wrapper to run the generated SWMM5+ C executable.
+REM
+REM Usage:
+REM   run.bat ^<input_file^> ^<output_file^> [report_file]
+REM
+REM Picks Release\\swmm5plus.exe if present, otherwise Debug\\swmm5plus.exe,
+REM then falls back to CMake build/ outputs.
+REM Run from the solution folder (the one containing swmm5plus.sln).
+REM ============================================================================
+setlocal EnableDelayedExpansion
+
+if "%~1"=="" goto :usage
+if "%~2"=="" goto :usage
+
+set "EXE="
+if exist "x64\\Release\\swmm5plus.exe" set "EXE=x64\\Release\\swmm5plus.exe"
+if "!EXE!"=="" if exist "x64\\Debug\\swmm5plus.exe" set "EXE=x64\\Debug\\swmm5plus.exe"
+if "!EXE!"=="" if exist "build\\Release\\swmm5plus.exe" set "EXE=build\\Release\\swmm5plus.exe"
+if "!EXE!"=="" if exist "build\\Debug\\swmm5plus.exe" set "EXE=build\\Debug\\swmm5plus.exe"
+
+if "!EXE!"=="" (
+    echo [run.bat] Could not find swmm5plus.exe.
+    echo           Build the solution first ^(Ctrl+Shift+B in Visual Studio^)
+    echo           or run: cmake --build build --config Release
+    exit /b 1
+)
+
+echo [run.bat] Using !EXE!
+"!EXE!" %*
+exit /b %ERRORLEVEL%
+
+:usage
+echo Usage: run.bat ^<input_file^> ^<output_file^> [report_file]
+echo Example: run.bat samples\\test.inp out\\test.out out\\test.rpt
+exit /b 1
+`;
+}
+
+function runSh(): string {
+  return `#!/usr/bin/env bash
+# =============================================================================
+# run.sh - Convenience wrapper to run the generated SWMM5+ C executable.
+#
+# Usage:
+#   ./run.sh <input_file> <output_file> [report_file]
+#
+# Searches common build output locations (CMake and Visual Studio) and runs
+# the first executable it finds.
+# =============================================================================
+set -euo pipefail
+
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Usage: $0 <input_file> <output_file> [report_file]" >&2
+    echo "Example: $0 samples/test.inp out/test.out out/test.rpt" >&2
+    exit 1
+fi
+
+CANDIDATES=(
+    "build/swmm5plus"
+    "build/Release/swmm5plus"
+    "build/Debug/swmm5plus"
+    "build/Release/swmm5plus.exe"
+    "build/Debug/swmm5plus.exe"
+    "x64/Release/swmm5plus.exe"
+    "x64/Debug/swmm5plus.exe"
+)
+
+EXE=""
+for candidate in "\${CANDIDATES[@]}"; do
+    if [ -f "$candidate" ]; then
+        EXE="$candidate"
+        break
+    fi
+done
+
+if [ -z "$EXE" ]; then
+    echo "[run.sh] Could not find a built swmm5plus executable." >&2
+    echo "         Build first with:" >&2
+    echo "             cmake -S . -B build && cmake --build build --config Release" >&2
+    echo "         or open swmm5plus.sln in Visual Studio and press Ctrl+Shift+B." >&2
+    exit 1
+fi
+
+echo "[run.sh] Using $EXE"
+exec "$EXE" "$@"
 `;
 }
 
@@ -281,11 +398,26 @@ swmm5plus.sln               Visual Studio solution
 swmm5plus.vcxproj           MSBuild project
 swmm5plus.vcxproj.filters   Solution Explorer filters
 CMakeLists.txt              CMake alternative
-src/main.c                  Entry point — calls every module's init/step/finalize
+src/main.c                  Entry point — parses <input> <output> [report] args
 src/<module>.h              One header per Fortran module
 src/<module>.c              One source per Fortran module (TODO bodies)
+run.bat                     Windows wrapper: run.bat input.inp output.out [report.rpt]
+run.sh                      macOS/Linux wrapper: ./run.sh input.inp output.out [report.rpt]
 README.txt                  Plain-text version of these instructions
 \`\`\`
+
+## Running the program
+
+After building, use the bundled wrappers from the solution folder:
+
+\`\`\`bash
+run.bat samples\\test.inp out\\test.out out\\test.rpt   # Windows
+./run.sh samples/test.inp out/test.out out/test.rpt    # macOS / Linux
+\`\`\`
+
+They auto-detect the built executable in \`x64/Release\`, \`x64/Debug\`, or
+\`build/\` and forward all arguments to it.
+
 
 ## Porting workflow
 
@@ -346,10 +478,31 @@ folder.
 
 HOW TO RUN THE GENERATED MAIN PROGRAM
 ================================================================================
+The program takes input and output file paths on the command line:
+
+   swmm5plus <input_file> <output_file> [report_file]
+
+Easiest way — bundled wrapper scripts
+-------------------------------------
+From the solution folder (the one with swmm5plus.sln), run:
+
+   Windows:        run.bat samples\\test.inp out\\test.out out\\test.rpt
+   macOS / Linux:  ./run.sh samples/test.inp out/test.out out/test.rpt
+
+The scripts auto-detect the built executable in x64\\Release, x64\\Debug, or
+build/ and forward all arguments. On macOS / Linux you may need to mark
+run.sh executable once after unzipping:
+
+   chmod +x run.sh
+
 From Visual Studio
 ------------------
-   Make sure the project "swmm5plus" is the StartUp project (it is by default),
-   then press F5. The console window will open and show the program output.
+Right-click the swmm5plus project > Properties > Debugging > Command Arguments
+and enter, for example:
+
+   samples\\test.inp out\\test.out out\\test.rpt
+
+Then press F5.
 
 From the command line (Windows)
 -------------------------------
@@ -361,11 +514,7 @@ After building, the executable is located at:
 Open a Developer Command Prompt for VS 2022, cd to the solution folder, and
 run:
 
-   x64\\Release\\swmm5plus.exe
-
-or
-
-   x64\\Debug\\swmm5plus.exe
+   x64\\Release\\swmm5plus.exe samples\\test.inp out\\test.out out\\test.rpt
 
 From CMake (cross-platform)
 ---------------------------
@@ -373,10 +522,11 @@ If you prefer CMake, run:
 
    cmake -S . -B build
    cmake --build build --config Release
+   ./build/swmm5plus samples/test.inp out/test.out out/test.rpt
 
 The executable will be in:
 
-   build\\swmm5plus      (Linux/macOS)
+   build/swmm5plus               (Linux/macOS)
    build\\Release\\swmm5plus.exe   (Windows)
 
 WHAT EACH FILE DOES
@@ -385,11 +535,14 @@ swmm5plus.sln               Visual Studio solution
 swmm5plus.vcxproj           MSBuild project with compiler settings above
 swmm5plus.vcxproj.filters   Solution Explorer source/header filters
 CMakeLists.txt              CMake alternative build file
-src/main.c                  Entry point: calls every module's init/step/finalize
+run.bat                     Windows wrapper for running the built executable
+run.sh                      macOS/Linux wrapper for running the built executable
+src/main.c                  Entry point: parses <input> <output> [report] args
 src/<module>.h              One header per Fortran module (mirror of use graph)
 src/<module>.c              One source per Fortran module (TODO bodies)
 README.txt                  This file
 README.md                   Markdown version of this file
+
 
 PORTING NOTES
 ================================================================================
@@ -429,6 +582,10 @@ export async function buildVisualStudioSolutionZip(
   zip.file("CMakeLists.txt", cmakeLists(modules));
   zip.file("README.md", readme(modules));
   zip.file("README.txt", readmeTxt(modules));
+  zip.file("run.bat", runBat());
+  // store run.sh with unix perms so it's executable after unzip on Linux/macOS
+  zip.file("run.sh", runSh(), { unixPermissions: 0o755 });
+
 
   // src/ — main.c + per-module pair
   const src = zip.folder("src")!;
