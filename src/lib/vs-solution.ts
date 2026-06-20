@@ -40,19 +40,43 @@ function mainC(modules: AutoModule[]): string {
  * Generated from ${GITHUB_REPO}@${GITHUB_BRANCH} on ${EXTRACTED_AT}.
  * Modules included: ${modules.length}
  *
- * This file calls every translated module's init / step / finalize stub
- * in declaration order. Replace the toy time loop below with the real
- * SWMM5+ driver as you port the timeloop module.
+ * Usage:
+ *   swmm5plus <input_file> <output_file> [report_file]
+ *
+ * The run.bat / run.sh scripts in the zip root wrap this so you can just
+ * pass paths without remembering the exe location.
  */
 #include <stdio.h>
+#include <string.h>
 
 ${includes}
 
-int main(int argc, char** argv) {
-    (void)argc; (void)argv;
-    printf("SWMM5+ (C translation) starting...\\n");
+static void usage(const char* prog) {
+    fprintf(stderr,
+        "Usage: %s <input_file> <output_file> [report_file]\\n"
+        "  input_file  - SWMM5+ input (.inp) path\\n"
+        "  output_file - binary results output path\\n"
+        "  report_file - optional text report path (default: <output>.rpt)\\n",
+        prog);
+}
 
-    /* --- initialization phase --- */
+int main(int argc, char** argv) {
+    if (argc < 3 || argc > 4 ||
+        strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0) {
+        usage(argv[0]);
+        return argc < 3 ? 1 : 0;
+    }
+    const char* input_path  = argv[1];
+    const char* output_path = argv[2];
+    const char* report_path = argc == 4 ? argv[3] : NULL;
+
+    printf("SWMM5+ (C translation) starting...\\n");
+    printf("  input  : %s\\n", input_path);
+    printf("  output : %s\\n", output_path);
+    if (report_path) printf("  report : %s\\n", report_path);
+
+    /* --- initialization phase ---
+     * TODO: pass input_path into the modules that need it as you port them. */
 ${inits}
 
     /* --- toy time loop (replace with real driver) --- */
@@ -61,12 +85,105 @@ ${inits}
 ${steps}
     }
 
-    /* --- finalization (reverse order) --- */
+    /* --- finalization (reverse order) ---
+     * TODO: write results to output_path / report_path as you port the
+     * output module. */
 ${fins}
 
     printf("SWMM5+ (C translation) done.\\n");
     return 0;
 }
+`;
+}
+
+function runBat(): string {
+  return `@echo off
+REM ============================================================================
+REM run.bat - Convenience wrapper to run the generated SWMM5+ C executable.
+REM
+REM Usage:
+REM   run.bat ^<input_file^> ^<output_file^> [report_file]
+REM
+REM Picks Release\\swmm5plus.exe if present, otherwise Debug\\swmm5plus.exe,
+REM then falls back to CMake build/ outputs.
+REM Run from the solution folder (the one containing swmm5plus.sln).
+REM ============================================================================
+setlocal EnableDelayedExpansion
+
+if "%~1"=="" goto :usage
+if "%~2"=="" goto :usage
+
+set "EXE="
+if exist "x64\\Release\\swmm5plus.exe" set "EXE=x64\\Release\\swmm5plus.exe"
+if "!EXE!"=="" if exist "x64\\Debug\\swmm5plus.exe" set "EXE=x64\\Debug\\swmm5plus.exe"
+if "!EXE!"=="" if exist "build\\Release\\swmm5plus.exe" set "EXE=build\\Release\\swmm5plus.exe"
+if "!EXE!"=="" if exist "build\\Debug\\swmm5plus.exe" set "EXE=build\\Debug\\swmm5plus.exe"
+
+if "!EXE!"=="" (
+    echo [run.bat] Could not find swmm5plus.exe.
+    echo           Build the solution first ^(Ctrl+Shift+B in Visual Studio^)
+    echo           or run: cmake --build build --config Release
+    exit /b 1
+)
+
+echo [run.bat] Using !EXE!
+"!EXE!" %*
+exit /b %ERRORLEVEL%
+
+:usage
+echo Usage: run.bat ^<input_file^> ^<output_file^> [report_file]
+echo Example: run.bat samples\\test.inp out\\test.out out\\test.rpt
+exit /b 1
+`;
+}
+
+function runSh(): string {
+  return `#!/usr/bin/env bash
+# =============================================================================
+# run.sh - Convenience wrapper to run the generated SWMM5+ C executable.
+#
+# Usage:
+#   ./run.sh <input_file> <output_file> [report_file]
+#
+# Searches common build output locations (CMake and Visual Studio) and runs
+# the first executable it finds.
+# =============================================================================
+set -euo pipefail
+
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Usage: $0 <input_file> <output_file> [report_file]" >&2
+    echo "Example: $0 samples/test.inp out/test.out out/test.rpt" >&2
+    exit 1
+fi
+
+CANDIDATES=(
+    "build/swmm5plus"
+    "build/Release/swmm5plus"
+    "build/Debug/swmm5plus"
+    "build/Release/swmm5plus.exe"
+    "build/Debug/swmm5plus.exe"
+    "x64/Release/swmm5plus.exe"
+    "x64/Debug/swmm5plus.exe"
+)
+
+EXE=""
+for candidate in "\${CANDIDATES[@]}"; do
+    if [ -f "$candidate" ]; then
+        EXE="$candidate"
+        break
+    fi
+done
+
+if [ -z "$EXE" ]; then
+    echo "[run.sh] Could not find a built swmm5plus executable." >&2
+    echo "         Build first with:" >&2
+    echo "             cmake -S . -B build && cmake --build build --config Release" >&2
+    echo "         or open swmm5plus.sln in Visual Studio and press Ctrl+Shift+B." >&2
+    exit 1
+fi
+
+echo "[run.sh] Using $EXE"
+exec "$EXE" "$@"
 `;
 }
 
