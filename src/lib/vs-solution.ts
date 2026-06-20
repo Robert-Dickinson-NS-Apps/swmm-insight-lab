@@ -546,6 +546,10 @@ export async function buildVisualStudioSolutionZip(
   zip.file("CMakeLists.txt", cmakeLists(modules));
   zip.file("README.md", readme(modules));
   zip.file("README.txt", readmeTxt(modules));
+  zip.file("run.bat", runBat());
+  // store run.sh with unix perms so it's executable after unzip on Linux/macOS
+  zip.file("run.sh", runSh(), { unixPermissions: 0o755 });
+
 
   // src/ — main.c + per-module pair
   const src = zip.folder("src")!;
