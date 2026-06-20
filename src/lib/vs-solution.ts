@@ -398,11 +398,26 @@ swmm5plus.sln               Visual Studio solution
 swmm5plus.vcxproj           MSBuild project
 swmm5plus.vcxproj.filters   Solution Explorer filters
 CMakeLists.txt              CMake alternative
-src/main.c                  Entry point — calls every module's init/step/finalize
+src/main.c                  Entry point — parses <input> <output> [report] args
 src/<module>.h              One header per Fortran module
 src/<module>.c              One source per Fortran module (TODO bodies)
+run.bat                     Windows wrapper: run.bat input.inp output.out [report.rpt]
+run.sh                      macOS/Linux wrapper: ./run.sh input.inp output.out [report.rpt]
 README.txt                  Plain-text version of these instructions
 \`\`\`
+
+## Running the program
+
+After building, use the bundled wrappers from the solution folder:
+
+\`\`\`bash
+run.bat samples\\test.inp out\\test.out out\\test.rpt   # Windows
+./run.sh samples/test.inp out/test.out out/test.rpt    # macOS / Linux
+\`\`\`
+
+They auto-detect the built executable in \`x64/Release\`, \`x64/Debug\`, or
+\`build/\` and forward all arguments to it.
+
 
 ## Porting workflow
 
