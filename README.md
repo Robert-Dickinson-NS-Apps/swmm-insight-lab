@@ -1,8 +1,11 @@
-# <span style="color:#0B5ED7;">SWMM Insight Lab</span>
+# <span style="color:#C0392B;">SWMM Insight Lab</span>
 
 <div align="center">
 
-## <span style="color:#198754;">Interactive web experiments for SWMM model insight, analytics, and automation</span>
+## <span style="color:#0B5ED7;">Water, atmosphere, and power modeling for a Valles Marineris settlement</span>
+
+**<span style="color:#198754;">Interactive single-file app with working EPANET and SWMM5 engines plus `.inp` export</span>**
+
 
 
 
@@ -16,117 +19,122 @@
 
 ## <span style="color:#DC3545;">Overview</span>
 
-`swmm-insight-lab` is a public GitHub repository owned by **Robert-Dickinson-NS-Apps** with ongoing recent development, about 70 commits on `main`, and a modern TypeScript-heavy web application structure built around `src/`, Bun, Vite, and a `.lovable` project configuration. The repository currently has no README, no description, no website, no topics, no releases, and no packages published, so a detailed landing page adds immediate value for discoverability and onboarding. [1]
+`swmm-insight-lab` is a public repository in the `Robert-Dickinson-NS-Apps` organization whose GitHub description now defines it as an **interactive single-file app modeling water, atmosphere, and power for a Valles Marineris settlement — with working EPANET and SWMM5 engines and `.inp` export**. The repository is active on `main`, shows **71 commits**, and is built primarily in **TypeScript (98.0%)** with smaller amounts of CSS and JavaScript. [1]
 
-From the repository structure and stack, this project appears to be a web-based laboratory for exploring SWMM-related ideas, prototypes, utilities, or insight-driven workflows rather than a plain source-code mirror of the EPA engine. The presence of `Added zipped run scripts` as the latest commit message suggests the project includes runnable or semi-automated workflows alongside its web UI. [1]
+The project therefore sits at an unusual and compelling intersection: it combines classic water-infrastructure simulation concepts with speculative settlement design on Mars. Unlike a generic visualization demo, the repo description explicitly says it includes **working EPANET and SWMM5 engines**, which makes it sound like a real modeling environment rather than a decorative concept app. [1]
 
-The combination of Bun, TypeScript, Lovable scaffolding, and a `src` application directory strongly suggests a modern interactive app intended for rapid prototyping and deployment. Lovable documents that newer generated projects are built on TanStack Start with server-side rendering support, which matches the repo's visible file pattern such as `vite.config.ts`, `package.json`, and `.lovable`. [1][2]
+The app is also presented as a **single-file app**, suggesting a compact, self-contained experience aimed at exploration, portability, rapid experimentation, or easy deployment. That framing makes the repository interesting both as an engineering prototype and as a design exercise in compressing infrastructure simulation into a lightweight interactive interface. [1]
 
 ***
 
-## <span style="color:#6F42C1;">Project idea</span>
+## <span style="color:#6F42C1;">What this project is about</span>
 
-The name **SWMM Insight Lab** implies an environment for experimenting with model understanding rather than just model execution. In a SWMM context, “insight” typically means turning input files, run artifacts, statistics, metadata, or scenario results into something easier to interpret, compare, and act on. [1]
+At its core, `swmm-insight-lab` appears to ask a powerful question: what would it take to model the essential utility systems of a settlement in **Valles Marineris** using familiar terrestrial network engines? The current About text explicitly names three system domains — **water, atmosphere, and power** — and pairs them with EPANET, SWMM5, and `.inp` export. [1]
 
-That makes this repository a good candidate for features such as model summaries, diagnostics, input parsing, run-script orchestration, scenario comparisons, QA checks, metadata extraction, or visual analytics for hydraulic and hydrologic models. The current GitHub page does not yet state which of those are already implemented, so this README is written to be accurate about the visible stack while also framing the repo in a way that matches its name and structure. [1]
+That combination suggests a workflow where infrastructure concepts are not treated as isolated diagrams but as interconnected modeled systems. EPANET naturally fits pressure-driven water-distribution logic, while SWMM5 fits drainage, runoff, or conveyance-network thinking; together, they provide a useful foundation for simulating utility behavior in a constrained off-world habitat context. [1]
+
+The project is especially interesting because it translates established civil and hydraulic modeling ideas into a speculative planetary setting. It effectively turns Mars settlement planning into a systems-engineering sandbox grounded in recognizable network models instead of only narrative worldbuilding. [1]
 
 ***
 
 ## <span style="color:#198754;">Current repository snapshot</span>
 
-GitHub currently shows the following top-level items in the `main` branch. [1]
+GitHub currently shows the following top-level repository structure. [1]
 
-| Path | What it likely represents |
+| Path | What it indicates |
 |---|---|
-| `.lovable/` | Project metadata or configuration related to Lovable-based development and deployment workflows. [1] |
-| `src/` | Main application source code for the web app. [1] |
-| `.gitignore` | Standard ignored files for the development environment. [1] |
-| `.prettierignore` / `.prettierrc` | Formatting configuration. [1] |
-| `bun.lock` | Locked package versions for Bun. [1] |
-| `bunfig.toml` | Bun runtime/config settings. [1] |
-| `components.json` | UI component configuration, likely for a component system such as shadcn/ui. [1] |
-| `eslint.config.js` | Linting rules and static analysis setup. [1] |
-| `package.json` | Project scripts and dependencies. [1] |
+| `.lovable/` | Lovable project metadata or generated configuration. [1] |
+| `src/` | Main application source code. [1] |
+| `README.md` | Recently added project documentation, created 33 minutes ago. [1] |
+| `bun.lock` | Dependency lockfile for Bun. [1] |
+| `bunfig.toml` | Bun configuration. [1] |
+| `components.json` | Frontend UI/component configuration. [1] |
+| `eslint.config.js` | Linting configuration. [1] |
+| `package.json` | Application scripts and dependencies. [1] |
 | `tsconfig.json` | TypeScript compiler configuration. [1] |
-| `vite.config.ts` | Build/dev configuration for the app. [1] |
+| `vite.config.ts` | Vite build and dev configuration. [1] |
 
-GitHub also reports the language mix as **TypeScript 98.0%**, **CSS 1.6%**, and **JavaScript 0.4%**, which reinforces that this is primarily an application codebase rather than a data-only or documentation-only repository. [1]
-
-***
-
-## <span style="color:#FD7E14;">Why this repo is useful</span>
-
-SWMM practitioners often have strong modeling workflows but weaker tooling for inspection, repeatable review, comparison, packaging, and communication. A repository like `swmm-insight-lab` can fill that gap by acting as an experimental platform where SWMM-related tasks are translated into faster web-native tools. [1]
-
-That matters because even experienced users benefit from lightweight utilities that reduce friction around model triage, run preparation, repository intelligence, statistics, or result interpretation. The recent commit history and active changes suggest the repository is evolving rather than archived, which is exactly when a robust README helps most. [1]
+The repository currently has **1 contributor**, **0 stars**, **0 forks**, **0 watchers**, **1 branch**, and **0 tags**, with no releases or packages published yet. The latest visible commit is **“Create README.md with project details and setup instructions”**, and the `src/` directory was updated **9 hours ago**, which confirms the project is under active iteration. [1]
 
 ***
 
-## <span style="color:#0D6EFD;">Probable stack</span>
+## <span style="color:#FD7E14;">Why the new description matters</span>
 
-Based on the visible files, this repository is built with a modern frontend/full-stack JavaScript toolchain centered on Bun, TypeScript, and Vite. The presence of `.lovable` also points to a Lovable-generated or Lovable-managed workflow, while Lovable's own documentation says newer projects are based on **TanStack Start**. [1][2]
+The repository now has a much more specific identity than before. It is no longer best described as a general “insight lab” for SWMM workflows; GitHub now frames it as a Mars-settlement utility simulator with **working EPANET and SWMM5 engines** and an export pathway to `.inp`. [1]
 
-A concise stack summary:
+That change matters because it repositions the project from a vague analytics sandbox into a more distinctive simulation product. Visitors now have a concrete mental model: this app explores how life-supporting infrastructure might be represented for a Valles Marineris settlement using familiar water-network and drainage-network engines. [1]
 
-- **Language:** TypeScript-first application code. [1]
+A README that reflects that wording immediately makes the repository feel more coherent. It aligns the title, the story, the stack, and the likely use cases into one technical narrative instead of leaving them as disconnected clues. [1]
+
+***
+
+## <span style="color:#0D6EFD;">Core concept</span>
+
+The strongest reading of the current repo description is that `swmm-insight-lab` acts as a **cross-domain infrastructure sandbox**. Instead of limiting itself to a single engineering discipline, it appears to bring together at least three interdependent systems: water, atmosphere, and power. [1]
+
+That matters because settlement resilience on Mars would depend on coupled infrastructure. Water distribution, drainage or wastewater pathways, atmospheric support, and power availability all affect one another, so a single interactive environment for exploring those dependencies is conceptually much stronger than isolated calculators. [1]
+
+Even before reading the code, the About text alone already suggests a rare design goal: using established network engines as anchors for a broader habitat-systems simulation. That is a compelling identity for the project and should be front and center in the README. [1]
+
+***
+
+## <span style="color:#20C997;">Technology signals</span>
+
+The visible repository structure points to a modern TypeScript-first web application built with Bun and Vite, and it includes a `.lovable` directory that strongly suggests a Lovable-based development workflow. GitHub reports the language mix as **98.0% TypeScript**, **1.6% CSS**, and **0.4% JavaScript**. [1]
+
+Lovable’s published guidance says newer generated projects are based on **TanStack Start**, which makes that a reasonable architectural inference here, even though the current page excerpt does not show `package.json` contents directly. The visible stack supports the idea that this is an interactive browser-based application rather than a static concept document. [2][1]
+
+### Visible stack summary
+
+- **Primary language:** TypeScript. [1]
 - **Runtime / package manager:** Bun. [1]
 - **Build tooling:** Vite. [1]
-- **Project generation / management:** Lovable. [1]
-- **Likely app style:** modern React-based TanStack Start application, inferred from Lovable's current project model. [2]
-
-Because the currently visible page does not expose `package.json` contents inline, this section avoids claiming specific libraries beyond what the page and Lovable documentation support. [1][2]
+- **Frontend app workflow:** Lovable-managed project structure. [1]
+- **Simulation framing:** working EPANET and SWMM5 engines called out in the repository description. [1]
 
 ***
 
-## <span style="color:#20C997;">Suggested purpose statement</span>
+## <span style="color:#D63384;">What makes this repo distinctive</span>
 
-> SWMM Insight Lab is a TypeScript-based web app for exploring, testing, and operationalizing insight-driven workflows around SWMM models, run scripts, and model intelligence. [1]
+Several things make `swmm-insight-lab` stand out. First, it is not just a SWMM utility; it is explicitly framed around **Mars settlement systems**. Second, it is not just a speculative art project; the description says the app includes **working EPANET and SWMM5 engines**. Third, it is not a heavy desktop application; it is presented as an **interactive single-file app**. [1]
 
-That statement stays close to what the repo visibly is today: an active app repository with SWMM branding, recent run-script work, and no current metadata explaining its mission. [1]
-
-***
-
-## <span style="color:#6610F2;">Suggested features section</span>
-
-The current repo page does not explicitly list implemented features, so this section is best presented as a project-oriented framing that can be refined after a source pass. [1]
-
-Potential or intended capability areas for **SWMM Insight Lab**:
-
-- **Model insight workflows** — tools for summarizing model content, structure, and key metrics.
-- **Run orchestration** — packaging or launching scripted SWMM runs, consistent with the recent addition of zipped run scripts. [1]
-- **Repository-aware utilities** — tracking artifacts, organizing model assets, or exposing engineering metadata.
-- **Interactive analysis** — web-native interfaces for exploring SWMM inputs, outputs, or QA checks.
-- **Rapid prototyping** — a lab-style environment for trying ideas before moving them into more formal engineering tools.
-
-This framing keeps the README useful immediately while leaving room for you to replace high-level bullets with exact features from `src/`. [1]
+That is a rare combination. It blends infrastructure realism, systems imagination, and lightweight web deployment into one concept, which gives the repository a clear identity even before the source is read in detail. [1]
 
 ***
 
-## <span style="color:#D63384;">Suggested project structure</span>
+## <span style="color:#6610F2;">Suggested feature framing</span>
 
-```text
-swmm-insight-lab/
-├── .lovable/            # Lovable project configuration
-├── src/                 # Main app source code
-├── .gitignore           # Ignored files
-├── .prettierignore      # Prettier ignore rules
-├── .prettierrc          # Prettier formatting rules
-├── bun.lock             # Bun dependency lockfile
-├── bunfig.toml          # Bun configuration
-├── components.json      # UI/component system configuration
-├── eslint.config.js     # ESLint configuration
-├── package.json         # Scripts and dependencies
-├── tsconfig.json        # TypeScript configuration
-└── vite.config.ts       # Vite configuration
-```
+The repository page does not yet expose the actual route list or concrete feature names from `src/`, so the most accurate feature section is one that stays close to the wording GitHub already provides. [1]
 
-This structure already tells contributors that the project is app-first, code-driven, and built with a current TS web stack. It also signals that documentation, examples, and deployment notes should live alongside the code rather than only in commit history. [1]
+Likely or intended capability areas suggested by the current public description:
+
+- **Settlement utility modeling** — simulate water, atmosphere, and power behavior in a Valles Marineris habitat context. [1]
+- **Embedded engine workflows** — use working EPANET and SWMM5 engines inside a web app experience. [1]
+- **Model export** — generate `.inp` output for downstream workflows or interoperability. [1]
+- **Interactive single-file deployment** — favor compact distribution and rapid experimentation. [1]
+- **Cross-disciplinary systems thinking** — connect hydraulic and infrastructure concepts in one off-world scenario. [1]
+
+A deeper source pass can later replace these framed capabilities with exact implementation details, screenshots, and route-specific descriptions. [1]
 
 ***
 
-## <span style="color:#198754;">Getting started</span>
+## <span style="color:#198754;">Suggested use cases</span>
 
-Because the repository page exposes Bun and Vite files but not the actual scripts inline, the commands below are a practical **recommended starter section** rather than a claim of verified exact commands. This is the safest way to provide immediate value without inventing package scripts. [1]
+The current description supports a range of compelling use cases. [1]
+
+- Exploring how terrestrial infrastructure engines might be reused for planetary settlements. [1]
+- Prototyping Mars habitat utility concepts in a browser-based interactive app. [1]
+- Teaching systems thinking through linked water, atmosphere, and power scenarios. [1]
+- Exporting `.inp`-style model data for further inspection or handoff. [1]
+- Demonstrating EPANET and SWMM5 in a creative but technically grounded narrative setting. [1]
+
+This makes the repository relevant not only to SWMM and EPANET users, but also to people interested in digital twins, infrastructure resilience, habitat design, and science-inspired engineering education. [1]
+
+***
+
+## <span style="color:#FFC107;">Getting started</span>
+
+The visible repo page clearly shows Bun and Vite configuration files, but it does not expose the exact script contents from `package.json` in the page excerpt. Because of that, the setup section below is written as a **practical starter template** rather than a claim of verified command support. [1]
 
 ### Prerequisites
 
@@ -147,108 +155,87 @@ cd swmm-insight-lab
 bun install
 ```
 
-### Start local development
+### Run locally
 
 ```bash
 bun run dev
 ```
 
-### Build for production
+### Build
 
 ```bash
 bun run build
 ```
 
-### Preview production build
+### Preview
 
 ```bash
 bun run preview
 ```
 
-Once the package scripts are confirmed from `package.json`, this section should be updated to match the exact supported commands. [1]
+This section should be tightened later against the actual `package.json` scripts and any engine-specific setup steps once the source files are inspected directly. [1]
 
 ***
 
-## <span style="color:#DC3545;">Use cases</span>
-
-This repository is well positioned for several high-value SWMM workflows. The exact ones should be narrowed after reviewing `src/`, but the repo name and active app structure point in these directions. [1]
-
-- Reviewing model assets without opening desktop tools.
-- Packaging or launching repeatable SWMM runs.
-- Building dashboards or summaries for engineering teams.
-- Creating experimental utilities for parsing, indexing, or comparing models.
-- Turning personal SWMM workflows into shareable browser-based tools.
-
-For a GitHub visitor, that is much more informative than the current blank README state. [1]
-
-***
-
-## <span style="color:#FFC107;">Repository health</span>
-
-The repository is active, with the latest commit made **9 hours ago** and a total history of **70 commits**. It currently has **1 contributor**, **0 stars**, **0 forks**, **0 watchers**, **1 branch**, and **0 tags**, which is typical of a focused personal or experimental engineering app that has not yet been broadly publicized. [1]
-
-No releases or packages have been published yet, which means the README should carry more of the onboarding load for now. Adding a description, topics, screenshots, and one or two releases later would improve adoption substantially. [1]
-
-***
-
-## <span style="color:#0B7285;">Suggested About box</span>
-
-**Description**
-
-> Interactive web lab for SWMM model insight, automation, and engineering workflows. [1]
-
-**Topics**
+## <span style="color:#0B7285;">Suggested project structure</span>
 
 ```text
-swmm
-stormwater
-hydraulics
-hydrology
-water-resources
-typescript
-bun
-vite
-lovable
-engineering-tools
-model-analysis
+swmm-insight-lab/
+├── .lovable/            # Lovable project configuration
+├── src/                 # Main application source code
+├── README.md            # Repository documentation
+├── bun.lock             # Bun dependency lockfile
+├── bunfig.toml          # Bun configuration
+├── components.json      # UI/component configuration
+├── eslint.config.js     # ESLint configuration
+├── package.json         # Scripts and dependencies
+├── tsconfig.json        # TypeScript configuration
+└── vite.config.ts       # Vite configuration
 ```
 
-GitHub currently shows no description, website, or topics, so adding these would immediately improve searchability and context. [1]
+This top-level structure shows a compact but serious application scaffold: code, tooling, formatting, and app infrastructure are all in place. The repository looks ready for deeper documentation that explains how the engines are integrated and how the single-file app experience is assembled. [1]
+
+***
+
+## <span style="color:#B02A37;">Suggested About box additions</span>
+
+The new GitHub description is already strong and specific. What it still needs are topics that match the Mars-plus-infrastructure identity of the repository. [1]
+
+**Suggested topics**
+
+```text
+mars
+valles-marineris
+swmm5
+epanet
+infrastructure-simulation
+water-systems
+habitat-design
+digital-twin
+typescript
+engineering-tools
+```
+
+Adding these would make the repo easier to discover and would communicate immediately that this is both a utility-modeling project and a speculative systems-engineering app. [1]
 
 ***
 
 ## <span style="color:#6C757D;">Contributing</span>
 
-At the moment, the repo appears to be a single-contributor project led by `dickinsonre`. That makes a short contribution guide especially useful so future collaborators know how to propose features, fix issues, or discuss SWMM-specific ideas. [1]
+The repository currently shows a single contributor, `dickinsonre`, so the project vision is still tightly focused. A short contribution note is useful anyway because the combination of simulation, interface design, and speculative infrastructure means contributors need to understand both the technical and conceptual framing. [1]
 
 Suggested contribution flow:
 
 1. Fork the repository.
-2. Create a branch for your change.
-3. Keep changes small and well described.
-4. Test the app locally before opening a pull request.
-5. Include screenshots or notes for UI changes.
-6. Document any SWMM-specific assumptions in the pull request.
+2. Create a focused branch.
+3. Keep infrastructure assumptions explicit.
+4. Test visible UI behavior before opening a pull request.
+5. Document any changes to engine behavior, export logic, or scenario assumptions. [1]
 
 ***
 
-## <span style="color:#B02A37;">Roadmap ideas</span>
+## <span style="color:#198754;">Next documentation step</span>
 
-A project named **SWMM Insight Lab** naturally supports a roadmap that grows from experimentation into reusable engineering tooling. Based on the visible repo posture, these are sensible future headings for the README. [1]
+This revised README now matches the new **Mars / EPANET / SWMM5** repository description much better than the earlier generic “insight lab” version. The best next step is a source-based pass through `package.json` and `src/` so the README can describe the actual app layout, exact scripts, engine integration points, export workflow, and any settlement modules or scenarios implemented in code. [1]
 
-- Model inventory and metadata extraction.
-- INP/RPT parsing and summary views.
-- Scenario comparison utilities.
-- Run-script packaging and execution helpers.
-- Visual dashboards for network statistics.
-- Exportable reports and shareable model insight pages.
-
-These ideas are aligned with the repo identity without overstating what is already implemented. [1]
-
-***
-
-## <span style="color:#198754;">Why a colorful README helps</span>
-
-Because the current repository has no description and no README content, visitors have no immediate way to understand what the app does, why it exists, or how to run it. A colorful README with badges, styled headings, and structured sections gives the project an identity and makes the repository look intentional from the first screen. [1]
-
-For a tool-oriented engineering repository, that presentation also builds confidence. It signals that the project is not just a code dump, but a curated application with a purpose and a direction. [1]
+That would turn the README from a strong narrative overview into a technically precise manual for the application. [1]
