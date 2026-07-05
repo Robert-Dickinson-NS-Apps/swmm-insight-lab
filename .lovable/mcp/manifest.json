@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "swmm5plus-repo-explorer",
+      "version": "0.1.0",
+      "title": "SWMM5+ Repo Explorer"
+    },
+    "tools": [
+      {
+        "name": "list_modules",
+        "title": "List SWMM5+ modules",
+        "description": "List all Fortran modules extracted from the SWMM5+ codebase, optionally filtered by subsystem.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "subsystem": {
+              "description": "Optional subsystem id (e.g. 'hydraulics', 'network', 'init', 'timeloop', 'output', 'interface', 'utility').",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_module",
+        "title": "Get SWMM5+ module details",
+        "description": "Return metadata for a single Fortran module: file path, subsystem, dependencies (use statements), and GitHub link.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Module id, lowercase (e.g. 'face', 'runge_kutta2')."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_modules",
+        "title": "Search SWMM5+ modules",
+        "description": "Case-insensitive substring search over module id, name, and file path.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search term."
+            },
+            "limit": {
+              "description": "Max results (default 20).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_papers",
+        "title": "List Hodges research papers",
+        "description": "List the curated Hodges (and collaborator) research papers that inform the SWMM5+ implementation.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "subsystem": {
+              "description": "Optional subsystem id to filter related papers.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "fetch_module_source",
+        "title": "Fetch SWMM5+ module Fortran source",
+        "description": "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Module id (lowercase)."
+            },
+            "maxChars": {
+              "description": "Truncate source to this many characters (default 40000).",
+              "type": "integer",
+              "minimum": 500,
+              "maximum": 200000
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
