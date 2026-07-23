@@ -7,6 +7,7 @@ import {
   GitCompare,
   FileCode2,
   Github,
+  Plug,
 } from "lucide-react";
 
 import {
@@ -29,6 +30,7 @@ const items = [
   { title: "Hodges papers", url: "/papers", icon: BookOpen },
   { title: "vs EPA SWMM5 (C)", url: "/c-alternative", icon: GitCompare },
   { title: "C translation", url: "/c-translation", icon: FileCode2 },
+  { title: "Connect via MCP", url: "/mcp-setup", icon: Plug },
 ] as const;
 
 export function AppSidebar() {
