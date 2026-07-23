@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TreeRouteImport } from './routes/tree'
 import { Route as PapersRouteImport } from './routes/papers'
+import { Route as McpSetupRouteImport } from './routes/mcp-setup'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as CTranslationRouteImport } from './routes/c-translation'
 import { Route as CAlternativeRouteImport } from './routes/c-alternative'
@@ -28,6 +29,11 @@ const TreeRoute = TreeRouteImport.update({
 const PapersRoute = PapersRouteImport.update({
   id: '/papers',
   path: '/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpSetupRoute = McpSetupRouteImport.update({
+  id: '/mcp-setup',
+  path: '/mcp-setup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/c-alternative': typeof CAlternativeRoute
   '/c-translation': typeof CTranslationRoute
   '/mcp': typeof McpRoute
+  '/mcp-setup': typeof McpSetupRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/c-alternative': typeof CAlternativeRoute
   '/c-translation': typeof CTranslationRoute
   '/mcp': typeof McpRoute
+  '/mcp-setup': typeof McpSetupRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/c-alternative': typeof CAlternativeRoute
   '/c-translation': typeof CTranslationRoute
   '/mcp': typeof McpRoute
+  '/mcp-setup': typeof McpSetupRoute
   '/papers': typeof PapersRoute
   '/tree': typeof TreeRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/c-alternative'
     | '/c-translation'
     | '/mcp'
+    | '/mcp-setup'
     | '/papers'
     | '/tree'
     | '/.mcp/list-tools'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/c-alternative'
     | '/c-translation'
     | '/mcp'
+    | '/mcp-setup'
     | '/papers'
     | '/tree'
     | '/.mcp/list-tools'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/c-alternative'
     | '/c-translation'
     | '/mcp'
+    | '/mcp-setup'
     | '/papers'
     | '/tree'
     | '/.mcp/list-tools'
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   CAlternativeRoute: typeof CAlternativeRoute
   CTranslationRoute: typeof CTranslationRoute
   McpRoute: typeof McpRoute
+  McpSetupRoute: typeof McpSetupRoute
   PapersRoute: typeof PapersRoute
   TreeRoute: typeof TreeRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       path: '/papers'
       fullPath: '/papers'
       preLoaderRoute: typeof PapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp-setup': {
+      id: '/mcp-setup'
+      path: '/mcp-setup'
+      fullPath: '/mcp-setup'
+      preLoaderRoute: typeof McpSetupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   CAlternativeRoute: CAlternativeRoute,
   CTranslationRoute: CTranslationRoute,
   McpRoute: McpRoute,
+  McpSetupRoute: McpSetupRoute,
   PapersRoute: PapersRoute,
   TreeRoute: TreeRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
