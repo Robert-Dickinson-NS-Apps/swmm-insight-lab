@@ -8,7 +8,7 @@
   "mcp": {
     "server": {
       "name": "swmm5plus-repo-explorer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "SWMM5+ Repo Explorer"
     },
     "tools": [
@@ -111,6 +111,31 @@
         "outputSchema": null
       },
       {
+        "name": "get_paper",
+        "title": "Get Hodges paper details",
+        "description": "Return full metadata and direct links (DOI/URL) for a single curated Hodges research paper by id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Paper id (e.g. 'hodges2019-hess', 'hodges-2024-jee')."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
         "name": "fetch_module_source",
         "title": "Fetch SWMM5+ module Fortran source",
         "description": "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count.",
@@ -133,6 +158,35 @@
               "type": "integer",
               "minimum": 500,
               "maximum": 200000
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "download_module_bundle",
+        "title": "Download SWMM5+ module bundle",
+        "description": "Return a zip (base64) containing the selected module's Fortran source and the sources of every in-repo module it transitively depends on via `use` statements, plus a MANIFEST.json listing the files.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Module id (lowercase, e.g. 'face', 'runge_kutta2')."
+            },
+            "includeTransitive": {
+              "description": "Include the full transitive `use` closure (default true). If false, only direct dependencies are included.",
+              "type": "boolean"
             }
           },
           "required": [
