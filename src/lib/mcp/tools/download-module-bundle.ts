@@ -2,6 +2,7 @@ import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import JSZip from "jszip";
 import { AUTO_MODULES_BY_ID, rawFileUrl, githubFileUrl, GITHUB_REPO, GITHUB_BRANCH } from "@/data/auto-modules";
+import { buildProvenance, sha256Hex } from "@/lib/mcp/provenance";
 
 /**
  * Return a zip containing the selected module's Fortran source plus the
@@ -119,6 +120,8 @@ ${[...unresolved].sort().map((u) => `  - ${u}`).join("\n") || "  (none)"}
         moduleCount: modules.length,
         manifest,
         zipBase64: b64,
+        content_sha256: await sha256Hex(buf),
+        provenance: buildProvenance(),
       },
     };
   },
