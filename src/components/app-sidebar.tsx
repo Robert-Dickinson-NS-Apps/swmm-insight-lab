@@ -28,8 +28,8 @@ const items = [
   { title: "Code tree", url: "/tree", icon: FolderTree },
   { title: "Architecture", url: "/architecture", icon: Network },
   { title: "Hodges papers", url: "/papers", icon: BookOpen },
-  { title: "vs EPA SWMM5 (C)", url: "/c-alternative", icon: GitCompare },
-  { title: "C translation", url: "/c-translation", icon: FileCode2 },
+  { title: "vs EPA SWMM 5.1.13", url: "/c-alternative", icon: GitCompare },
+  { title: "C port scaffold", url: "/c-translation", icon: FileCode2 },
   { title: "Connect via MCP", url: "/mcp-setup", icon: Plug },
 ] as const;
 

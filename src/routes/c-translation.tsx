@@ -14,17 +14,17 @@ import { Input } from "@/components/ui/input";
 export const Route = createFileRoute("/c-translation")({
   head: () => ({
     meta: [
-      { title: "C Translation — SWMM5+ Repo Explorer" },
+      { title: "C port planning scaffold — SWMM5+ Repo Explorer" },
       {
         name: "description",
         content:
-          "Auto-generated C header/source skeletons and a Visual Studio solution for every SWMM5+ Fortran module — ready to drop into MSVC, Visual Studio, or a CMake build.",
+          "Mechanically generated file skeletons and a Visual Studio solution to plan a hypothetical Fortran→C port of SWMM5+. Numerics, types, and coarrays are NOT translated.",
       },
-      { property: "og:title", content: "SWMM5+ Fortran → C Skeletons" },
+      { property: "og:title", content: "SWMM5+ C port planning scaffold" },
       {
         property: "og:description",
         content:
-          "Browse, copy, and export per-module C stubs and a full Visual Studio solution derived from the SWMM5+ Fortran sources.",
+          "Empty .h/.c stubs, dependency includes, and MSVC project files — planning scaffold, not a translation.",
       },
     ],
   }),
@@ -126,18 +126,43 @@ function CTranslationPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       <p className="text-xs uppercase tracking-[0.18em] text-accent font-medium">
-        C translation
+        C port planning scaffold
       </p>
-      <h1 className="mt-2 font-display text-4xl">Fortran → C skeletons</h1>
-      <p className="mt-3 max-w-3xl text-muted-foreground">
-        Every SWMM5+ Fortran module is mapped to a matching <code>.h</code> /{" "}
-        <code>.c</code> pair below. The skeletons preserve the module's{" "}
-        <code>use</code> dependencies as <code>#include</code> directives and
-        expose three stub entry points (<code>init</code>, <code>step</code>,{" "}
-        <code>finalize</code>) you can flesh out as you translate the
-        subroutines. The output compiles as-is with MSVC, clang, or gcc — bodies
-        are <code>TODO</code> comments. Tick the modules you want in the bundle
-        and download a ready-to-open Visual Studio solution.
+      <h1 className="mt-2 font-display text-4xl">C port planning scaffold</h1>
+
+      <Card className="mt-5 border-amber-500/40 bg-amber-500/5 p-4">
+        <div className="text-sm">
+          <div className="font-medium text-foreground">This is a scaffold, not a translation</div>
+          <p className="mt-1 text-muted-foreground">
+            The exporter mechanically emits file names, include guards,
+            dependency <code>#include</code>s, and empty{" "}
+            <code>init</code> / <code>step</code> / <code>finalize</code> stubs
+            for every extracted Fortran module. It does <strong>not</strong>{" "}
+            translate procedure signatures, derived types, arrays, coarrays,
+            allocation semantics, module state, generic interfaces, numerics,
+            HDF5 interaction, or ISO C bindings. The generated Visual Studio
+            solution compiles cleanly — that only proves the empty scaffold
+            builds, not that any SWMM5+ behaviour has been ported.
+          </p>
+        </div>
+      </Card>
+
+      <Card className="mt-3 p-4">
+        <div className="text-xs uppercase tracking-wider text-muted-foreground">Translation coverage</div>
+        <div className="mt-2 grid grid-cols-2 gap-3 md:grid-cols-5 text-sm">
+          <CoverageStat label="Files scaffolded" value={AUTO_MODULES.length} />
+          <CoverageStat label="Procedures translated" value={0} muted />
+          <CoverageStat label="Types translated" value={0} muted />
+          <CoverageStat label="Numerical kernels translated" value={0} muted />
+          <CoverageStat label="Behavioural tests passing" value={0} muted />
+        </div>
+      </Card>
+
+      <p className="mt-5 max-w-3xl text-muted-foreground">
+        Pick modules below to preview or bundle. The header preserves the module's
+        <code> use</code> dependencies as <code>#include</code> directives. The
+        source exposes three lifecycle stubs (<code>init</code>, <code>step</code>,{" "}
+        <code>finalize</code>). Every function body is a <code>TODO</code>.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
@@ -167,7 +192,7 @@ function CTranslationPage() {
         <code>swmm5plus.vcxproj</code>, a CMake build file, a generated{" "}
         <code>main.c</code> entry point, and one <code>.h</code>/<code>.c</code>{" "}
         pair per selected module. Open the .sln in Visual Studio 2022 (v143
-        toolset, x64) and hit Build.
+        toolset, x64) and hit Build. It will link — because the bodies are empty.
       </p>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[360px_1fr]">
