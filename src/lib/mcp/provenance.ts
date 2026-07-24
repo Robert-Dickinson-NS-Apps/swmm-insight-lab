@@ -36,7 +36,9 @@ export function buildProvenance() {
 export async function sha256Hex(input: string | Uint8Array): Promise<string> {
   try {
     const bytes = typeof input === "string" ? new TextEncoder().encode(input) : input;
-    const buf = await crypto.subtle.digest("SHA-256", bytes);
+    const copy = new Uint8Array(bytes.byteLength);
+    copy.set(bytes);
+    const buf = await crypto.subtle.digest("SHA-256", copy);
     return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
   } catch {
     return "";
