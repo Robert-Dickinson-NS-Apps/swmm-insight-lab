@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { ExternalLink, Download, Upload, X } from "lucide-react";
+import { ProvenanceBar } from "@/components/provenance-bar";
 import { Button } from "@/components/ui/button";
 
 const ModuleGraph = lazy(() => import("@/components/module-graph"));
@@ -238,6 +239,7 @@ function ArchitecturePage() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-10">
       <h1 className="font-display text-4xl">Architecture</h1>
+      <div className="mt-4"><ProvenanceBar /></div>
       <p className="mt-2 max-w-3xl text-muted-foreground">
         SWMM5+ is organised into eight loosely-coupled subsystems. <span className="text-foreground">Initialization</span>{" "}
         and the <span className="text-foreground">EPA-SWMM C interface</span> stand up the network; the{" "}
