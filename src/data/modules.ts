@@ -1,16 +1,34 @@
 import type { SubsystemId } from "./subsystems";
 
+/**
+ * How a SWMM5+ Fortran module relates to its counterpart in the EPA
+ * SWMM C runtime that SWMM5+ actually links against (v5.1.13).
+ */
+export type CRelation =
+  | "direct-port"
+  | "functional-analogue"
+  | "centralized-equivalent"
+  | "shared-concept"
+  | "wrapper"
+  | "extension"
+  | "new-in-swmm5plus";
+
+export type CConfidence = "high" | "medium" | "low";
+
 export interface ModuleNode {
-  id: string;            // canonical Fortran module name
-  label: string;         // display name
-  path: string;          // repo path
+  id: string;
+  label: string;
+  path: string;
   subsystem: SubsystemId;
   summary: string;
-  uses: string[];        // ids of other modules it depends on (curated, not exhaustive)
+  uses: string[];
   cEquivalent?: {
-    file: string;        // EPA SWMM C source file (USEPA/Stormwater-Management-Model)
-    symbol?: string;     // representative function / struct
-    notes?: string;      // how the two relate, what differs
+    file: string;        // EPA SWMM C source file (v5.1.13). "—" = truly no counterpart.
+    symbol?: string;
+    notes?: string;
+    relation?: CRelation;
+    confidence?: CConfidence;
+    reviewed?: boolean;
   };
 }
 
