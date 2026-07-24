@@ -354,3 +354,12 @@ function CTranslationPage() {
     </div>
   );
 }
+
+function CoverageStat({ label, value, muted }: { label: string; value: number; muted?: boolean }) {
+  return (
+    <div className="border-t border-border pt-2">
+      <div className={"font-display text-2xl " + (muted ? "text-muted-foreground" : "")}>{value}</div>
+      <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+    </div>
+  );
+}
