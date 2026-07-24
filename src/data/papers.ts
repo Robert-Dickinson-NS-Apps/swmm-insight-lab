@@ -1,5 +1,18 @@
 import type { SubsystemId } from "./subsystems";
 
+/**
+ * How strongly a paper is tied to the SWMM5+ implementation:
+ *  - implementation-source: paper explicitly describes this SWMM5+ algorithm
+ *  - direct-basis:          module implements equations from this paper
+ *  - author-cited-context:  SWMM5+ authors cite this paper as background
+ *  - explorer-inference:    relationship inferred here, not stated upstream
+ */
+export type EvidenceLevel =
+  | "implementation-source"
+  | "direct-basis"
+  | "author-cited-context"
+  | "explorer-inference";
+
 export interface Paper {
   id: string;
   title: string;
@@ -10,14 +23,23 @@ export interface Paper {
   summary: string;
   relatedSubsystems: SubsystemId[];
   relatedModules?: string[];
-  /** Mark the foundational paper(s) */
   primary?: boolean;
+  evidenceLevel?: EvidenceLevel;
 }
+
+/**
+ * Beta / research-status caveat straight from the 2024 introduction paper.
+ * Surfaced prominently on the papers and overview pages so downstream
+ * readers don't mistake SWMM5+ for production-ready software.
+ */
+export const RESEARCH_STATUS_NOTICE =
+  "The SWMM5+ authors state (Hodges 2024, J. Env. Eng.) that SWMM5+ remains research software, may contain hidden bugs around complex hydraulic components, and requires further testing and debugging before general production use.";
 
 /**
  * Curated reading list of Hodges (and close collaborators') papers that
  * directly informed SWMM5+. Citations verified against HESS / MDPI Water /
- * ASCE / Springer / NSF PAR (Nov 2024).
+ * ASCE / Springer / NSF PAR (Nov 2024). Authorship on the 2024 intro paper
+ * expanded to include the full co-author list on the DOI record.
  */
 export const PAPERS: Paper[] = [
   {
@@ -76,13 +98,15 @@ export const PAPERS: Paper[] = [
   {
     id: "hodges-2024-jee",
     primary: true,
+    evidenceLevel: "implementation-source",
     title: "Introducing SWMM5+",
-    authors: "Ben R. Hodges (Forum paper)",
+    authors:
+      "Ben R. Hodges, Sazzad Sharior, Edward Tiernan, Eric Jenkins, Gerardo Riaño-Briceño, Cesar Davila-Hernandez, Ehsan Madadi-Kandjani, Cheng-Wei Yu",
     year: 2024,
     venue: "Journal of Environmental Engineering (ASCE) 150(10)",
     url: "https://doi.org/10.1061/JOEEDU.EEENG-7680",
     summary:
-      "Official public introduction of the SWMM5+ beta. Documents the coarray-Fortran SPMD architecture, the RK2 FV solver with adaptive CFL < √2/2 stepping, the Preissmann slot for surcharge, the JSON/HDF5 I/O, and an honest estimate of when SWMM5+ will out-pace EPA SWMM (≥32 processors, ≥~160k FV elements).",
+      "Official public introduction of the SWMM5+ beta. Documents the coarray-Fortran SPMD architecture, the RK2 FV solver with adaptive CFL < √2/2 stepping, the Preissmann slot for surcharge, the JSON/HDF5 I/O, and an honest estimate of when SWMM5+ will out-pace EPA SWMM (≥32 processors, ≥~160k FV elements). The paper explicitly notes that SWMM5+ remains research software requiring further testing.",
     relatedSubsystems: ["init", "hydraulics", "timeloop", "interface", "output"],
     relatedModules: ["main", "initialization", "interface", "runge_kutta2", "output"],
   },

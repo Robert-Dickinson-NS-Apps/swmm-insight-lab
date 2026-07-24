@@ -1,16 +1,34 @@
 import type { SubsystemId } from "./subsystems";
 
+/**
+ * How a SWMM5+ Fortran module relates to its counterpart in the EPA
+ * SWMM C runtime that SWMM5+ actually links against (v5.1.13).
+ */
+export type CRelation =
+  | "direct-port"
+  | "functional-analogue"
+  | "centralized-equivalent"
+  | "shared-concept"
+  | "wrapper"
+  | "extension"
+  | "new-in-swmm5plus";
+
+export type CConfidence = "high" | "medium" | "low";
+
 export interface ModuleNode {
-  id: string;            // canonical Fortran module name
-  label: string;         // display name
-  path: string;          // repo path
+  id: string;
+  label: string;
+  path: string;
   subsystem: SubsystemId;
   summary: string;
-  uses: string[];        // ids of other modules it depends on (curated, not exhaustive)
+  uses: string[];
   cEquivalent?: {
-    file: string;        // EPA SWMM C source file (USEPA/Stormwater-Management-Model)
-    symbol?: string;     // representative function / struct
-    notes?: string;      // how the two relate, what differs
+    file: string;        // EPA SWMM C source file (v5.1.13). "—" = truly no counterpart.
+    symbol?: string;
+    notes?: string;
+    relation?: CRelation;
+    confidence?: CConfidence;
+    reviewed?: boolean;
   };
 }
 
@@ -63,7 +81,7 @@ export const MODULES: ModuleNode[] = [
     subsystem: "init",
     summary: "Selects partitioning strategy and assigns elements to coarray images.",
     uses: ["BIPquick", "define_settings"],
-    cEquivalent: { file: "—", notes: "EPA SWMM5 is serial — no partitioning. This entire subsystem is new in SWMM5+." },
+    cEquivalent: { file: "—", relation: "new-in-swmm5plus", confidence: "high", reviewed: true, notes: "EPA SWMM does not implement distributed / coarray SPMD partitioning; its dynamic-wave solver uses shared-memory OpenMP across links (see USEPA/Stormwater-Management-Model src/solver/dynwave.c). SWMM5+'s network partitioner across coarray images is genuinely new." },
   },
   {
     id: "BIPquick",
@@ -72,7 +90,7 @@ export const MODULES: ModuleNode[] = [
     subsystem: "init",
     summary: "Balanced Iterative Partitioning of the link-node graph for load-balanced parallel runs.",
     uses: ["define_indexes", "utility_array"],
-    cEquivalent: { file: "—", notes: "No EPA equivalent (serial engine). Inspired by graph-partitioning literature; documented in the Hodges & Liu papers." },
+    cEquivalent: { file: "—", relation: "new-in-swmm5plus", confidence: "high", reviewed: true, notes: "No EPA equivalent — EPA SWMM does not perform network partitioning of any kind. Inspired by graph-partitioning literature; documented in the Hodges & Liu papers." },
   },
   {
     id: "initial_condition",
@@ -169,19 +187,19 @@ export const MODULES: ModuleNode[] = [
   },
   { id: "geometry_lowlevel",   label: "geometry_lowlevel",   path: "geometry/geometry_lowlevel.f90",   subsystem: "network", summary: "Shared geometry helpers (hyd-radius, slot adjustments).", uses: ["define_settings"] },
   { id: "circular_conduit",    label: "circular_conduit",    path: "geometry/circular_conduit.f90",    subsystem: "network", summary: "Closed circular pipe with Preissmann-slot extension.", uses: ["geometry_lowlevel", "xsect_tables", "preissmann_slot"], cEquivalent: { file: "src/solver/xsect.c", symbol: "CIRCULAR section", notes: "EPA SWMM uses the same dimensionless tables; SWMM5+ adds explicit slot handling." } },
-  { id: "filled_circular_conduit", label: "filled_circular_conduit", path: "geometry/filled_circular_conduit.f90", subsystem: "network", summary: "Circular pipe with sediment fill at invert.", uses: ["circular_conduit", "geometry_lowlevel"] },
-  { id: "forcemain",           label: "forcemain",           path: "geometry/forcemain.f90",           subsystem: "network", summary: "Force-main always-pressurized conduit treatment.", uses: ["geometry_lowlevel", "preissmann_slot"], cEquivalent: { file: "src/solver/forcmain.c" } },
-  { id: "irregular_channel",   label: "irregular_channel",   path: "geometry/irregular_channel.f90",   subsystem: "network", summary: "User transect channels with depth/area/width interpolation.", uses: ["utility_interpolate", "define_types"], cEquivalent: { file: "src/solver/transect.c" } },
-  { id: "mod_basket_conduit",  label: "mod_basket_conduit",  path: "geometry/mod_basket_conduit.f90",  subsystem: "network", summary: "Modified basket-handle conduit.", uses: ["xsect_tables", "geometry_lowlevel"] },
-  { id: "parabolic_channel",   label: "parabolic_channel",   path: "geometry/parabolic_channel.f90",   subsystem: "network", summary: "Parabolic open channel.", uses: ["geometry_lowlevel"] },
-  { id: "powerfunction_channel", label: "powerfunction_channel", path: "geometry/powerfunction_channel.f90", subsystem: "network", summary: "Power-function open channel y = a·xᵇ.", uses: ["geometry_lowlevel"] },
-  { id: "rectangular_channel", label: "rectangular_channel", path: "geometry/rectangular_channel.f90", subsystem: "network", summary: "Open rectangular channel.", uses: ["geometry_lowlevel"] },
-  { id: "rectangular_conduit", label: "rectangular_conduit", path: "geometry/rectangular_conduit.f90", subsystem: "network", summary: "Closed rectangular conduit with slot.", uses: ["geometry_lowlevel", "preissmann_slot"] },
-  { id: "rectangular_round_conduit",     label: "rectangular_round_conduit",     path: "geometry/rectangular_round_conduit.f90",     subsystem: "network", summary: "Rectangular conduit with rounded bottom.", uses: ["geometry_lowlevel", "xsect_tables"] },
-  { id: "rectangular_triangular_conduit",label: "rectangular_triangular_conduit",path: "geometry/rectangular_triangular_conduit.f90",subsystem: "network", summary: "Rectangular conduit with triangular bottom.", uses: ["geometry_lowlevel", "xsect_tables"] },
-  { id: "storage_geometry",    label: "storage_geometry",    path: "geometry/storage_geometry.f90",    subsystem: "network", summary: "Storage-node depth-area/depth-volume curves.", uses: ["utility_interpolate"], cEquivalent: { file: "src/solver/node.c", symbol: "node_getStorageVolume" } },
-  { id: "trapezoidal_channel", label: "trapezoidal_channel", path: "geometry/trapezoidal_channel.f90", subsystem: "network", summary: "Trapezoidal open channel.", uses: ["geometry_lowlevel"] },
-  { id: "triangular_channel",  label: "triangular_channel",  path: "geometry/triangular_channel.f90",  subsystem: "network", summary: "Triangular V-shape channel.", uses: ["geometry_lowlevel"] },
+  { id: "filled_circular_conduit", label: "filled_circular_conduit", path: "geometry/filled_circular_conduit.f90", subsystem: "network", summary: "Circular pipe with sediment fill at invert.", uses: ["circular_conduit", "geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "FILLED_CIRCULAR", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements FILLED_CIRCULAR inside xsect.c's shape dispatcher; SWMM5+ splits it into a dedicated module." } },
+  { id: "forcemain",           label: "forcemain",           path: "geometry/forcemain.f90",           subsystem: "network", summary: "Force-main always-pressurized conduit treatment.", uses: ["geometry_lowlevel", "preissmann_slot"], cEquivalent: { file: "src/solver/forcmain.c", relation: "shared-concept", confidence: "medium" } },
+  { id: "irregular_channel",   label: "irregular_channel",   path: "geometry/irregular_channel.f90",   subsystem: "network", summary: "User transect channels with depth/area/width interpolation.", uses: ["utility_interpolate", "define_types"], cEquivalent: { file: "src/solver/transect.c", relation: "functional-analogue", confidence: "medium" } },
+  { id: "mod_basket_conduit",  label: "mod_basket_conduit",  path: "geometry/mod_basket_conduit.f90",  subsystem: "network", summary: "Modified basket-handle conduit.", uses: ["xsect_tables", "geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "MOD_BASKET", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements MOD_BASKET inside xsect.c." } },
+  { id: "parabolic_channel",   label: "parabolic_channel",   path: "geometry/parabolic_channel.f90",   subsystem: "network", summary: "Parabolic open channel.", uses: ["geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "PARABOLIC", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements PARABOLIC inside xsect.c." } },
+  { id: "powerfunction_channel", label: "powerfunction_channel", path: "geometry/powerfunction_channel.f90", subsystem: "network", summary: "Power-function open channel y = a·xᵇ.", uses: ["geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "POWERFUNC", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements POWERFUNC inside xsect.c." } },
+  { id: "rectangular_channel", label: "rectangular_channel", path: "geometry/rectangular_channel.f90", subsystem: "network", summary: "Open rectangular channel.", uses: ["geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "RECT_OPEN", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements RECT_OPEN inside xsect.c." } },
+  { id: "rectangular_conduit", label: "rectangular_conduit", path: "geometry/rectangular_conduit.f90", subsystem: "network", summary: "Closed rectangular conduit with slot.", uses: ["geometry_lowlevel", "preissmann_slot"], cEquivalent: { file: "src/solver/xsect.c", symbol: "RECT_CLOSED", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements RECT_CLOSED inside xsect.c; SWMM5+ adds explicit Preissmann-slot bookkeeping." } },
+  { id: "rectangular_round_conduit",     label: "rectangular_round_conduit",     path: "geometry/rectangular_round_conduit.f90",     subsystem: "network", summary: "Rectangular conduit with rounded bottom.", uses: ["geometry_lowlevel", "xsect_tables"], cEquivalent: { file: "src/solver/xsect.c", symbol: "RECT_ROUND", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements RECT_ROUND inside xsect.c." } },
+  { id: "rectangular_triangular_conduit",label: "rectangular_triangular_conduit",path: "geometry/rectangular_triangular_conduit.f90",subsystem: "network", summary: "Rectangular conduit with triangular bottom.", uses: ["geometry_lowlevel", "xsect_tables"], cEquivalent: { file: "src/solver/xsect.c", symbol: "RECT_TRIANG", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements RECT_TRIANG inside xsect.c." } },
+  { id: "storage_geometry",    label: "storage_geometry",    path: "geometry/storage_geometry.f90",    subsystem: "network", summary: "Storage-node depth-area/depth-volume curves.", uses: ["utility_interpolate"], cEquivalent: { file: "src/solver/node.c", symbol: "node_getStorageVolume", relation: "functional-analogue", confidence: "medium" } },
+  { id: "trapezoidal_channel", label: "trapezoidal_channel", path: "geometry/trapezoidal_channel.f90", subsystem: "network", summary: "Trapezoidal open channel.", uses: ["geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "TRAPEZOIDAL", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements TRAPEZOIDAL inside xsect.c." } },
+  { id: "triangular_channel",  label: "triangular_channel",  path: "geometry/triangular_channel.f90",  subsystem: "network", summary: "Triangular V-shape channel.", uses: ["geometry_lowlevel"], cEquivalent: { file: "src/solver/xsect.c", symbol: "TRIANGULAR", relation: "centralized-equivalent", confidence: "high", reviewed: true, notes: "EPA SWMM implements TRIANGULAR inside xsect.c." } },
   { id: "xsect_tables",        label: "xsect_tables",        path: "geometry/xsect_tables.f90",        subsystem: "network", summary: "Generic dimensionless-table lookup engine.", uses: ["define_xsect_tables", "utility_interpolate"], cEquivalent: { file: "src/solver/xsect.c" } },
 
   // ── special elements ─────────────────────────────────────────────────
@@ -212,7 +230,7 @@ export const MODULES: ModuleNode[] = [
     subsystem: "timeloop",
     summary: "Outer hydraulics/hydrology time loop with adaptive dt and coupling.",
     uses: ["runge_kutta2", "boundary_conditions", "interface", "output", "utility_profiler", "define_settings"],
-    cEquivalent: { file: "src/solver/routing.c", symbol: "routing_execute", notes: "EPA SWMM's routing_execute drives a fixed routing step; SWMM5+ does adaptive RK2 with CFL control." },
+    cEquivalent: { file: "src/solver/routing.c", symbol: "routing_execute", relation: "functional-analogue", confidence: "medium", reviewed: true, notes: "Both orchestrate the routing step. EPA SWMM: implicit iterative dynamic-wave with an OPTIONAL variable step (Courant factor). SWMM5+: explicit FV RK2 with a CFL-constrained adaptive step integral to numerical stability. The contrast is the numerical role of the adaptive step, not fixed-vs-adaptive." },
   },
   {
     id: "runge_kutta2",
@@ -270,7 +288,7 @@ export const MODULES: ModuleNode[] = [
     subsystem: "hydraulics",
     summary: "Trapped-air pocket model for surcharged tunnels — a SWMM5+ research contribution.",
     uses: ["define_settings", "preissmann_slot"],
-    cEquivalent: { file: "—", notes: "No EPA equivalent — air-water two-phase modeling is unique to SWMM5+." },
+    cEquivalent: { file: "—", relation: "new-in-swmm5plus", confidence: "high", reviewed: true, notes: "No EPA equivalent — air-water two-phase modeling is unique to SWMM5+." },
   },
 
   // ── main output ──────────────────────────────────────────────────────

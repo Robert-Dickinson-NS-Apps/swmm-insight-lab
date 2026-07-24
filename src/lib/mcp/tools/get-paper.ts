@@ -1,12 +1,13 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { PAPERS } from "@/data/papers";
+import { buildProvenance } from "@/lib/mcp/provenance";
 
 export default defineTool({
   name: "get_paper",
   title: "Get Hodges paper details",
   description:
-    "Return full metadata and direct links (DOI/URL) for a single curated Hodges research paper by id.",
+    "Return full metadata and direct links (DOI/URL) for a single curated Hodges research paper by id. Response includes a `provenance` envelope.",
   inputSchema: {
     id: z.string().min(1).describe("Paper id (e.g. 'hodges2019-hess', 'hodges-2024-jee')."),
   },
@@ -28,6 +29,7 @@ export default defineTool({
       year: p.year,
       venue: p.venue,
       primary: p.primary ?? false,
+      evidenceLevel: p.evidenceLevel ?? (p.primary ? "implementation-source" : "direct-basis"),
       summary: p.summary,
       links: {
         canonical: p.url,
@@ -38,8 +40,8 @@ export default defineTool({
       relatedModules: p.relatedModules ?? [],
     };
     return {
-      content: [{ type: "text", text: JSON.stringify(detail, null, 2) }],
-      structuredContent: detail,
+      content: [{ type: "text", text: JSON.stringify({ ...detail, provenance: buildProvenance() }, null, 2) }],
+      structuredContent: { ...detail, provenance: buildProvenance() },
     };
   },
 });

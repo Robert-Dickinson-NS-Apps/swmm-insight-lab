@@ -1,12 +1,13 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { AUTO_MODULES_BY_ID, rawFileUrl, githubFileUrl } from "@/data/auto-modules";
+import { buildProvenance, sha256Hex } from "@/lib/mcp/provenance";
 
 export default defineTool({
   name: "fetch_module_source",
   title: "Fetch SWMM5+ module Fortran source",
   description:
-    "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count.",
+    "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count. Response includes `provenance` and a `content_sha256` of the raw source.",
   inputSchema: {
     id: z.string().min(1).describe("Module id (lowercase)."),
     maxChars: z
@@ -34,11 +35,21 @@ export default defineTool({
     const cap = maxChars ?? 40000;
     const truncated = raw.length > cap;
     const body = truncated ? `${raw.slice(0, cap)}\n\n... [truncated ${raw.length - cap} chars]` : raw;
+    const contentSha256 = await sha256Hex(raw);
+    const provenance = buildProvenance();
     return {
       content: [
         { type: "text", text: `Source of ${m.path} (${raw.length} chars${truncated ? ", truncated" : ""}):\n\n${body}` },
       ],
-      structuredContent: { path: m.path, url: githubFileUrl(m.path), length: raw.length, truncated, source: body },
+      structuredContent: {
+        path: m.path,
+        url: githubFileUrl(m.path),
+        length: raw.length,
+        truncated,
+        source: body,
+        content_sha256: contentSha256,
+        provenance,
+      },
     };
   },
 });

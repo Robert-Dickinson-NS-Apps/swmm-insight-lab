@@ -1,74 +1,70 @@
+# Accuracy & Provenance Pass
 
-# SWMM5plus Repo Explorer
+This is a scoped implementation of the review's **P0 items** (facts/trust). P1/P2 items (real Fortran parsing, coverage metrics, DOI validation, diff views) are out of scope here — call them out as follow-ups.
 
-A single-page TanStack Start app that maps the [CIMM-ORG/SWMM5plus-1](https://github.com/CIMM-ORG/SWMM5plus-1) Fortran codebase, links it to Ben Hodges' research papers, and shows a side-by-side mapping to EPA SWMM5 (C) equivalents.
+## 1. EPA runtime version pinning (5.1.13, not master)
 
-All content is statically curated (no live GitHub fetching). I'll research the repo, the published EPA SWMM5 source layout, and Hodges' papers once via Firecrawl/web search, then bake the data into typed TS files.
+- Add a single source of truth `src/data/provenance.ts` exporting:
+  - `SWMM5PLUS = { repo: "CIMM-ORG/SWMM5plus-1", branch: "development", commit: <from extracted-modules.json if present, else null> }`
+  - `EPA_RUNTIME = { repo: "USEPA/Stormwater-Management-Model", ref: "v5.1.13" }` (what SWMM5+ actually links via CMake FetchContent)
+  - `EPA_REFERENCE = { repo: "USEPA/Stormwater-Management-Model", ref: "master" }` (optional modern comparison)
+  - `EXPLORER_GENERATED_AT` from the extraction timestamp
+- Rewrite `src/routes/c-alternative.tsx`:
+  - Change `EPA` base URL to build from `EPA_RUNTIME` (v5.1.13), not master.
+  - Add a mode toggle: **Runtime (5.1.13)** ↔ **Modern (master)**. Links + notes swap.
+  - Render a provenance strip at top: repo, branch, commit, EPA ref, generated-at.
+- Add the same provenance strip to `index.tsx`, `architecture.tsx`, `tree.tsx`, `papers.tsx`, `c-translation.tsx` via a small shared `<ProvenanceBar />` component.
 
-## Pages / tabs
+## 2. Correct C-equivalent mappings
 
-Top-level layout: sidebar (collapsible) + main content area. Sidebar lists the four sections; each is its own route for shareable URLs and proper SEO.
+In `src/data/modules.ts`, rework `cEquivalent` entries:
 
-1. **`/` — Overview**
-   - Project description, key concepts (finite-volume St. Venant solver, parallel coarray Fortran, link-node network).
-   - Quick stats: # top-level modules, # source files, primary subsystems.
-   - Hero diagram (simplified architecture).
+- Replace freeform `notes` with a controlled `relation` field: `"direct-port" | "functional-analogue" | "centralized-equivalent" | "shared-concept" | "wrapper" | "extension" | "new-in-swmm5plus"`, plus a `confidence: "high" | "medium" | "low"` and `reviewed: boolean` (default false).
+- Fix the geometry rows currently marked "no equivalent" — filled circular, mod-basket, parabolic, power-function, rect-round, rect-triangular — to point at `src/solver/xsect.c` with relation `centralized-equivalent`.
+- Update the C-alternative table columns: **SWMM5+ Fortran | EPA SWMM (C) | Relation | Confidence | Notes**. Color-code relation.
 
-2. **`/tree` — Code tree explorer**
-   - Two-pane: left = folder tree of `/SWMM5plus-1` (collapsible), right = description panel for the selected file/folder (purpose, key procedures, related modules).
-   - Curated descriptions for every top-level directory and major `.f90` file.
+## 3. Reframe "serial" and "fixed timestep" claims
 
-3. **`/architecture` — Architecture & dependency graph**
-   - Hand-curated high-level subsystem diagram (Initialization → Network → Hydraulics solver → Hydrology → Output, with shared Utility/Coarray layers) rendered as SVG.
-   - Interactive module dependency graph (force-directed) using `react-force-graph-2d`. Nodes = modules grouped by subsystem (color-coded); edges = `use` relationships. Click a node → side panel with module summary + link to its tree entry.
+- In `c-alternative.tsx` intro copy and any per-row notes, replace:
+  - "EPA SWMM is serial" → "EPA SWMM does not implement distributed / coarray SPMD partitioning; its dynamic-wave solver uses shared-memory OpenMP across links."
+  - "Fixed vs adaptive timestep" → "EPA SWMM: implicit iterative dynamic-wave with optional variable step (Courant factor). SWMM5+: explicit FV RK2 with CFL-constrained adaptive step."
+- Same corrections in `index.tsx` overview blurb if present.
 
-4. **`/papers` — Ben Hodges papers**
-   - Curated cards: 6–10 key papers (e.g. Hodges 2019 *Conservative finite-volume forms of the Saint-Venant equations*, Hodges & Liu papers on SWMM5+, CUAHSI / EWRI proceedings).
-   - Each card: title, authors, year, venue, DOI/arXiv link, 2–3 sentence summary, and tags showing which subsystem(s) it underpins (links back to `/architecture`).
+## 4. Module count consistency
 
-5. **`/c-alternative` — SWMM5 C side-by-side**
-   - Header explains the comparison: SWMM5+ (Fortran, finite-volume, parallel) vs EPA SWMM5 (C, kinematic/dynamic wave, serial).
-   - Big table: each row = a SWMM5+ Fortran module/concept; columns = `SWMM5+ (Fortran)` | `EPA SWMM5 (C)` equivalent file/function | Notes on differences (algorithmic, structural, what's missing).
-   - Rows grouped by subsystem matching `/architecture`.
+- Homepage (`index.tsx`) and `c-translation.tsx`: change "72 modules" to `"{N} source units — {N-1} modules + 1 main program"` sourced from `AUTO_MODULES` length + a hardcoded main-program adjustment. Verify the actual count from `extracted-modules.json` before wiring.
 
-## Data model
+## 5. Paper attribution
 
-All curated content lives in `src/data/`:
+- In `src/data/papers.ts`, expand the "Introducing SWMM5+" entry authors to include Sharior, Tiernan, Jenkins, Riaño-Briceño, Davila-Hernandez, Madadi-Kandjani, Yu (verify list against DOI 10.1061/JOEEDU.EEENG-7680 before saving).
+- Add an `evidenceLevel` field per paper: `"implementation-source" | "direct-basis" | "author-cited-context" | "explorer-inference"` with a legend on `/papers`.
+- Add a prominent research-status banner on `/papers` and `/` quoting the 2024 intro paper's beta / testing caveat.
 
-- `src/data/tree.ts` — recursive `TreeNode` structure mirroring the repo.
-- `src/data/modules.ts` — typed list of Fortran modules with `{ id, name, path, subsystem, summary, uses: string[], cEquivalent?: { file, symbol, notes } }`.
-- `src/data/papers.ts` — typed list of papers with `{ title, authors, year, venue, url, summary, relatedModules: string[] }`.
-- `src/data/subsystems.ts` — color tokens + descriptions for grouping.
+## 6. Reframe the C translator
 
-## Technical details
+- Rename the `/c-translation` page heading to **"C Port Planning Scaffold"** and update sidebar label.
+- Prepend a plain-language disclaimer: file names, include guards, dependency includes, and empty `init/step/finalize` stubs are generated — no procedures, types, coarrays, or numerics are translated.
+- Add a static **Translation coverage** panel: `Files scaffolded: N`, `Procedures translated: 0`, `Types translated: 0`, `Numerical kernels translated: 0`, `Behavioral tests passing: 0`.
+- Leave `src/lib/c-skeleton.ts` / `vs-solution.ts` code paths unchanged.
 
-- **Stack**: TanStack Start (already scaffolded), Tailwind v4, shadcn components (Sidebar, Card, Tabs, Table, ScrollArea, Badge).
-- **Graph**: add `react-force-graph-2d` (lightweight, canvas-based, works in browser only — render inside a client-only wrapper with a loading fallback to avoid SSR issues).
-- **Routing**: 5 separate route files under `src/routes/` (`index.tsx`, `tree.tsx`, `architecture.tsx`, `papers.tsx`, `c-alternative.tsx`), each with its own `head()` metadata.
-- **Layout**: `__root.tsx` gets a `SidebarProvider` + `AppSidebar` + `<Outlet />`.
-- **Design**: muted scholarly palette (deep navy primary, warm sand neutrals, single coral accent for highlights — fits an academic/engineering tool). Serif display font (Instrument Serif) for headings, clean sans (Work Sans) for body. No generic AI-blue.
-- **Research step (before coding)**: I'll use Firecrawl to scrape the GitHub repo file tree, Hodges' Google Scholar / ResearchGate page for paper list, and the EPA SWMM source repo (`USEPA/Stormwater-Management-Model`) for the C equivalents.
+## 7. MCP provenance in every response
 
-## Out of scope
+- Add a shared `buildProvenance()` helper in `src/lib/mcp/provenance.ts` returning `{ repository, ref, commit, retrieved_at, explorer_version }`.
+- Include it in `structuredContent` for every tool in `src/lib/mcp/tools/*.ts` (list-modules, get-module, search-modules, list-papers, get-paper, fetch-module-source, download-module-bundle). No new tools; no schema-breaking changes.
+- `fetch_module_source` + `download_module_bundle` additionally include `content_sha256` (compute via `crypto.subtle.digest`).
+- After edits, run `app_mcp_server--extract_mcp_manifest` to refresh `.lovable/mcp/manifest.json`.
 
-- No live GitHub API calls, no auth, no backend.
-- No actual source code rendering — descriptions only (with links to GitHub for the real files).
-- No editing/notes — read-only explorer.
+## 8. Out of scope (call out to user)
 
-## Files to create
+- Live Fortran AST parsing / real procedure signatures / call graphs
+- Test coverage integration
+- DOI-driven paper metadata validation
+- Nightly re-extraction job & repo-diff view
+- Fixing the reported Architecture-route 500 (needs repro; likely crawler-specific per review)
 
-```
-src/data/{tree,modules,papers,subsystems}.ts
-src/components/app-sidebar.tsx
-src/components/architecture-diagram.tsx
-src/components/module-graph.tsx          (client-only force graph)
-src/components/tree-explorer.tsx
-src/components/paper-card.tsx
-src/components/comparison-table.tsx
-src/routes/__root.tsx                    (update: add sidebar layout)
-src/routes/index.tsx                     (overview)
-src/routes/tree.tsx
-src/routes/architecture.tsx
-src/routes/papers.tsx
-src/routes/c-alternative.tsx
-```
+## Files touched
+
+- New: `src/data/provenance.ts`, `src/components/provenance-bar.tsx`, `src/lib/mcp/provenance.ts`
+- Edit: `src/data/modules.ts`, `src/data/papers.ts`, `src/routes/{index,c-alternative,c-translation,papers,architecture,tree}.tsx`, `src/components/app-sidebar.tsx`, all 7 files under `src/lib/mcp/tools/`
+
+Confirm and I'll implement, or tell me which sections to drop / prioritize.

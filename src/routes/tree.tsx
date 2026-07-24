@@ -4,6 +4,7 @@ import { ChevronRight, ChevronDown, Folder, FileCode, ExternalLink } from "lucid
 import { REPO_TREE, type TreeNode } from "@/data/tree";
 import { SUBSYSTEM_BY_ID } from "@/data/subsystems";
 import { Badge } from "@/components/ui/badge";
+import { ProvenanceBar } from "@/components/provenance-bar";
 
 export const Route = createFileRoute("/tree")({
   head: () => ({
@@ -22,13 +23,18 @@ const GH = "https://github.com/CIMM-ORG/SWMM5plus-1/tree/development";
 function TreePage() {
   const [selected, setSelected] = useState<TreeNode>(REPO_TREE);
   return (
-    <div className="grid h-[calc(100vh-3rem)] grid-cols-[minmax(260px,400px)_1fr]">
-      <aside className="overflow-auto border-r border-border bg-card/40 p-3">
-        <TreeBranch node={REPO_TREE} depth={0} onSelect={setSelected} selectedPath={selected.path} defaultOpen />
-      </aside>
-      <section className="overflow-auto p-8">
-        <DetailPanel node={selected} />
-      </section>
+    <div className="flex h-[calc(100vh-3rem)] flex-col">
+      <div className="border-b border-border px-3 py-2">
+        <ProvenanceBar />
+      </div>
+      <div className="grid flex-1 min-h-0 grid-cols-[minmax(260px,400px)_1fr]">
+        <aside className="overflow-auto border-r border-border bg-card/40 p-3">
+          <TreeBranch node={REPO_TREE} depth={0} onSelect={setSelected} selectedPath={selected.path} defaultOpen />
+        </aside>
+        <section className="overflow-auto p-8">
+          <DetailPanel node={selected} />
+        </section>
+      </div>
     </div>
   );
 }

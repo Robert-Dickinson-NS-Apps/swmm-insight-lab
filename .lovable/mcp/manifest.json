@@ -15,7 +15,7 @@
       {
         "name": "list_modules",
         "title": "List SWMM5+ modules",
-        "description": "List all Fortran modules extracted from the SWMM5+ codebase, optionally filtered by subsystem.",
+        "description": "List all Fortran modules extracted from the SWMM5+ codebase, optionally filtered by subsystem. Every response includes a `provenance` envelope pinning the SWMM5+ revision and EPA runtime version (5.1.13).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -36,7 +36,7 @@
       {
         "name": "get_module",
         "title": "Get SWMM5+ module details",
-        "description": "Return metadata for a single Fortran module: file path, subsystem, dependencies (use statements), and GitHub link.",
+        "description": "Return metadata for a single Fortran module: file path, subsystem, dependencies (use statements), and GitHub link. Response `structuredContent` includes a `provenance` envelope.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -61,7 +61,7 @@
       {
         "name": "search_modules",
         "title": "Search SWMM5+ modules",
-        "description": "Case-insensitive substring search over module id, name, and file path.",
+        "description": "Case-insensitive substring search over module id, name, and file path. Response includes a `provenance` envelope.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -92,7 +92,7 @@
       {
         "name": "list_papers",
         "title": "List Hodges research papers",
-        "description": "List the curated Hodges (and collaborator) research papers that inform the SWMM5+ implementation.",
+        "description": "List the curated Hodges (and collaborator) research papers that inform the SWMM5+ implementation. Response includes a `provenance` envelope.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -113,7 +113,7 @@
       {
         "name": "get_paper",
         "title": "Get Hodges paper details",
-        "description": "Return full metadata and direct links (DOI/URL) for a single curated Hodges research paper by id.",
+        "description": "Return full metadata and direct links (DOI/URL) for a single curated Hodges research paper by id. Response includes a `provenance` envelope.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -138,7 +138,7 @@
       {
         "name": "fetch_module_source",
         "title": "Fetch SWMM5+ module Fortran source",
-        "description": "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count.",
+        "description": "Download the raw Fortran source of a SWMM5+ module from GitHub. Optionally truncate to a max character count. Response includes `provenance` and a `content_sha256` of the raw source.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
